@@ -114,6 +114,13 @@
     display: none;
 }
 
+/* Hide canvas-only controls inside the sidebar — they appear after drop */
+#pg-sidebar .pg-remove,
+#pg-sidebar .pg-drag,
+#pg-sidebar .pg-configuration {
+    display: none !important;
+}
+
 /* Sections body — hidden until header clicked */
 .pg-section-body {
     display: none;
