@@ -16,10 +16,10 @@
     display: none !important;
 }
 
-/* ── Outer wrapper: flex row — sidebar left, main content right ── */
+/* ── Outer wrapper: flex column — toolbar on top, body below ── */
 #pagegenerator-wrap {
     display: flex;
-    align-items: flex-start; /* required for sticky sidebar to work */
+    flex-direction: column;
 }
 
 /* ── Left sidebar: sticky so it stays visible while scrolling ── */
@@ -122,10 +122,11 @@
     display: block;
 }
 
-/* ── Main area: toolbar + canvas, takes remaining width ── */
+/* ── Body row: sidebar + canvas side by side ── */
 #pg-main {
+    display: flex;
+    align-items: flex-start; /* required for sticky sidebar */
     flex: 1;
-    min-width: 0;
 }
 
 /* ── Toolbar navbar (top bar) ── */
@@ -143,6 +144,8 @@
 
 /* ── Canvas area ── */
 #pg-canvas {
+    flex: 1;
+    min-width: 0;
     padding: 20px;
     background: #f8f9fa;
     min-height: 400px;
