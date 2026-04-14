@@ -11,16 +11,22 @@
  */
 
 /* ── Override Moodle page chrome ── */
-/* Hide the auto-generated page heading */
+/* Hide the auto-generated page heading (covers Moodle 4.x and 5.x selectors) */
 .path-local-pagegenerator #page-header,
-.path-local-pagegenerator .page-header-headings {
+.path-local-pagegenerator .page-header-headings,
+.path-local-pagegenerator .header-maxwidth,
+.path-local-pagegenerator #page-navbar {
     display: none !important;
 }
-/* Remove container padding so layout goes full-width */
+/* Remove container constraints so the builder fills the full viewport width.
+   Targets Moodle 4.x and 5.x Boost layout wrappers. */
+.path-local-pagegenerator #page-content,
 .path-local-pagegenerator #region-main-box,
 .path-local-pagegenerator #region-main,
 .path-local-pagegenerator [role="main"],
-.path-local-pagegenerator .page-content-wrapper {
+.path-local-pagegenerator .main-content-wrapper,
+.path-local-pagegenerator .page-content-wrapper,
+.path-local-pagegenerator #topofscroll {
     padding: 0 !important;
     margin: 0 !important;
     max-width: none !important;
