@@ -1,0 +1,397 @@
+{{!
+    Template: local_pagegenerator/main
+    Context:
+        wwwroot       (string) Moodle wwwroot
+        pluginpath    (string) Full URL to plugin directory
+        str_*         (string) Localised strings from index.php
+}}
+<div id="pagegenerator-wrap" class="edit">
+
+    {{! ── Top toolbar ── }}
+    <div id="pg-toolbar">
+        {{! Viewport size toggles }}
+        <div class="btn-group me-3">
+            <button onclick="pgResizeCanvas('lg')" class="btn btn-sm btn-outline-secondary" title="Desktop"><i class="fa fa-desktop"></i></button>
+            <button onclick="pgResizeCanvas('md')" class="btn btn-sm btn-outline-secondary" title="Laptop"><i class="fa fa-laptop"></i></button>
+            <button onclick="pgResizeCanvas('sm')" class="btn btn-sm btn-outline-secondary" title="Tablet"><i class="fa fa-tablet"></i></button>
+            <button onclick="pgResizeCanvas('xs')" class="btn btn-sm btn-outline-secondary" title="Mobile"><i class="fa fa-mobile-phone"></i></button>
+        </div>
+
+        {{! Edit / Developer / Preview mode toggles }}
+        <div class="btn-group me-3" id="pg-viewModeGroup">
+            <button id="pg-edit" class="btn btn-sm btn-outline-secondary active">
+                <i class="fa fa-edit"></i> Edit
+            </button>
+            <button id="pg-devpreview" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-eye-slash"></i> {{{str_developer}}}
+            </button>
+            <button id="pg-sourcepreview" class="btn btn-sm btn-outline-secondary">
+                <i class="fa fa-eye"></i> {{{str_preview}}}
+            </button>
+        </div>
+
+        {{! Undo / Redo }}
+        <div class="btn-group me-3">
+            <button id="pg-undo" class="btn btn-sm btn-outline-secondary" title="Undo"><i class="fa fa-undo"></i></button>
+            <button id="pg-redo" class="btn btn-sm btn-outline-secondary" title="Redo"><i class="fa fa-repeat"></i></button>
+        </div>
+
+        <div class="ms-auto d-flex gap-2">
+            <button id="pg-clear" class="btn btn-sm btn-outline-danger">
+                <i class="fa fa-trash"></i> {{{str_clear}}}
+            </button>
+            <button class="btn btn-sm btn-primary"
+                    data-bs-toggle="modal" data-bs-target="#pg-downloadModal">
+                <i class="fa fa-chevron-down"></i> {{{str_download}}}
+            </button>
+        </div>
+    </div>
+
+    {{! ── Left sidebar ── }}
+    <div id="pg-sidebar">
+
+        {{! SECTION: Grid System }}
+        <div class="pg-section">
+            <button class="pg-section-header" data-section="pg-grid">
+                <i class="fa fa-plus"></i> {{{str_grid}}}
+                <span class="float-end">
+                    <i class="fa fa-question-circle text-secondary"
+                       title="{{{str_helpgrid}}}"></i>
+                </span>
+            </button>
+            <div class="pg-section-body" id="pg-grid">
+
+                {{! Each .pg-lyrow is draggable. The .pg-view contains the actual
+                    row HTML that gets cloned into the canvas. }}
+
+                <div class="pg-lyrow ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview"><input value="12" type="text"></div>
+                    <div class="pg-view">
+                        <div class="pg-row-block clearfix">
+                            <div class="col-12 column"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pg-lyrow ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview"><input value="6 6" type="text"></div>
+                    <div class="pg-view">
+                        <div class="pg-row-block clearfix">
+                            <div class="col-6 column"></div>
+                            <div class="col-6 column"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pg-lyrow ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview"><input value="4 4 4" type="text"></div>
+                    <div class="pg-view">
+                        <div class="pg-row-block clearfix">
+                            <div class="col-4 column"></div>
+                            <div class="col-4 column"></div>
+                            <div class="col-4 column"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pg-lyrow ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview"><input value="3 9" type="text"></div>
+                    <div class="pg-view">
+                        <div class="pg-row-block clearfix">
+                            <div class="col-3 column"></div>
+                            <div class="col-9 column"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pg-lyrow ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview"><input value="4 8" type="text"></div>
+                    <div class="pg-view">
+                        <div class="pg-row-block clearfix">
+                            <div class="col-4 column"></div>
+                            <div class="col-8 column"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{! /pg-grid }}
+        </div>{{! /pg-section Grid }}
+
+        {{! SECTION: Base CSS }}
+        <div class="pg-section">
+            <button class="pg-section-header" data-section="pg-basecss">
+                <i class="fa fa-plus"></i> {{{str_basecss}}}
+                <span class="float-end">
+                    <i class="fa fa-question-circle text-secondary"
+                       title="{{{str_helpbase}}}"></i>
+                </span>
+            </button>
+            <div class="pg-section-body" id="pg-basecss">
+
+                {{! Heading }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <span class="pg-configuration">
+                        <button type="button" class="btn btn-sm btn-outline-light btn-xs"
+                                data-bs-toggle="modal" data-bs-target="#pg-editorModal">Editor</button>
+                    </span>
+                    <div class="pg-preview">Heading</div>
+                    <div class="pg-view">
+                        <h3 contenteditable="true">h3. Lorem ipsum dolor sit amet.</h3>
+                    </div>
+                </div>
+
+                {{! Paragraph }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <span class="pg-configuration">
+                        <button type="button" class="btn btn-sm btn-outline-light btn-xs"
+                                data-bs-toggle="modal" data-bs-target="#pg-editorModal">Editor</button>
+                    </span>
+                    <div class="pg-preview">Paragraph</div>
+                    <div class="pg-view" contenteditable="true">
+                        <p>Lorem ipsum dolor sit amet, <strong>consectetur adipiscing elit</strong>.
+                        Aliquam eget sapien sapien. Curabitur in metus urna.</p>
+                    </div>
+                </div>
+
+                {{! Button }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Button</div>
+                    <div class="pg-view">
+                        <a href="#" class="btn btn-primary" contenteditable="true">Button</a>
+                    </div>
+                </div>
+
+                {{! Alert }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Alert</div>
+                    <div class="pg-view">
+                        <div class="alert alert-warning" role="alert" contenteditable="true">
+                            <strong>Warning!</strong> Something went wrong.
+                        </div>
+                    </div>
+                </div>
+
+                {{! Table }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Table</div>
+                    <div class="pg-view">
+                        <table class="table table-striped">
+                            <thead><tr><th>Column 1</th><th>Column 2</th><th>Column 3</th></tr></thead>
+                            <tbody>
+                                <tr><td contenteditable="true">Row 1</td><td contenteditable="true">Data</td><td contenteditable="true">Data</td></tr>
+                                <tr><td contenteditable="true">Row 2</td><td contenteditable="true">Data</td><td contenteditable="true">Data</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {{! Jumbotron / Hero }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Jumbotron</div>
+                    <div class="pg-view">
+                        <div class="p-5 mb-4 bg-light rounded-3" contenteditable="true">
+                            <h1>Hello, world!</h1>
+                            <p>A simple hero section for a marketing or landing page.</p>
+                            <a href="#" class="btn btn-primary btn-lg">Learn more</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{! /pg-basecss }}
+        </div>{{! /pg-section Base CSS }}
+
+        {{! SECTION: JavaScript Components }}
+        <div class="pg-section">
+            <button class="pg-section-header" data-section="pg-jscomponents">
+                <i class="fa fa-plus"></i> {{{str_js}}}
+            </button>
+            <div class="pg-section-body" id="pg-jscomponents">
+
+                {{! Accordion }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Accordion</div>
+                    <div class="pg-view">
+                        <div class="accordion" id="myAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                            aria-expanded="true" aria-controls="collapseOne"
+                                            contenteditable="true">Group Item #1</button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show"
+                                     aria-labelledby="headingOne" data-bs-parent="#myAccordion">
+                                    <div class="accordion-body" contenteditable="true">
+                                        Content for item one.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                            aria-expanded="false" aria-controls="collapseTwo"
+                                            contenteditable="true">Group Item #2</button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse"
+                                     aria-labelledby="headingTwo" data-bs-parent="#myAccordion">
+                                    <div class="accordion-body" contenteditable="true">
+                                        Content for item two.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Tabs }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Tabs</div>
+                    <div class="pg-view">
+                        <div id="myTabs">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" href="#tab1" data-bs-toggle="tab"
+                                       role="tab" contenteditable="true">Section 1</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" href="#tab2" data-bs-toggle="tab"
+                                       role="tab" contenteditable="true">Section 2</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content pt-3">
+                                <div class="tab-pane active" id="tab1" role="tabpanel"
+                                     contenteditable="true">Content for tab 1.</div>
+                                <div class="tab-pane" id="tab2" role="tabpanel"
+                                     contenteditable="true">Content for tab 2.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Modal trigger + modal }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Modal</div>
+                    <div class="pg-view">
+                        <button id="myModalLink" type="button" class="btn btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#myModalContainer"
+                                contenteditable="true">Launch Demo Modal</button>
+                        <div id="myModalContainer" class="modal fade" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" contenteditable="true">Modal Title</h5>
+                                        <button type="button" class="btn-close"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" contenteditable="true">
+                                        <p>Modal body content goes here.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-secondary"
+                                                data-bs-dismiss="modal">Close</button>
+                                        <button class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{! /pg-jscomponents }}
+        </div>{{! /pg-section JS }}
+
+    </div>{{! /pg-sidebar }}
+
+    {{! ── Main canvas ── }}
+    <div id="pg-canvas">
+        <div class="pg-demo ui-sortable" style="min-height: 300px;"></div>
+        {{! Hidden clone used by downloadLayoutSrc() to generate clean HTML }}
+        <div id="pg-download-layout">
+            <div class="container-fluid"></div>
+        </div>
+    </div>
+
+</div>{{! /pagegenerator-wrap }}
+
+{{! ── Editor Modal (CKEditor / TinyMCE replacement) ── }}
+{{! NOTE: In Moodle you can replace this textarea with a proper
+    TinyMCE 6 instance by calling editor_textarea_use_editor() from PHP.
+    For now a plain contenteditable-based approach is used. }}
+<div class="modal fade" id="pg-editorModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{{str_editcontent}}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="pg-contenteditor" class="form-control" rows="12"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="pg-savecontent" class="btn btn-primary"
+                        data-bs-dismiss="modal">{{{str_save}}}</button>
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">{{{str_cancel}}}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{! ── Download Modal ── }}
+<div class="modal fade" id="pg-downloadModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{{str_download}}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Choose page container type:</p>
+                <div class="btn-group mb-3">
+                    <button type="button" id="pg-fluidPage"
+                            class="btn btn-info active">{{{str_fluidpage}}}</button>
+                    <button type="button" id="pg-fixedPage"
+                            class="btn btn-outline-info">{{{str_fixedpage}}}</button>
+                </div>
+                <textarea id="pg-generatedhtml" class="form-control" rows="10" readonly></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="pg-copyhtml" class="btn btn-secondary">
+                    <i class="fa fa-copy"></i> {{{str_copyhtml}}}
+                </button>
+                <button class="btn btn-primary" onclick="pgSaveHtml()">
+                    <i class="fa fa-download"></i> {{{str_download}}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
