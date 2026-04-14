@@ -1,76 +1,45 @@
 /*
  * local_pagegenerator/styles.css
  *
- * Replaces toolbox.css from the standalone version.
  * Uses only Moodle's Bootstrap 5 utilities where possible;
- * custom rules only for layout specifics that Bootstrap can't express inline.
+ * custom rules only for layout specifics Bootstrap can't express inline.
  *
- * Loaded automatically by Moodle for every page (Moodle auto-includes
- * a plugin's styles.css). The #pagegenerator-wrap selector scopes
- * everything so we don't pollute other pages.
+ * Loaded automatically by Moodle for every page. The #pagegenerator-wrap
+ * selector scopes everything so we don't pollute other pages.
  */
 
-/* ── Override Moodle page chrome ── */
-/* Hide the auto-generated page heading (covers Moodle 4.x and 5.x selectors) */
+/* ── Hide Moodle's auto-generated page heading ── */
 .path-local-pagegenerator #page-header,
 .path-local-pagegenerator .page-header-headings,
 .path-local-pagegenerator .header-maxwidth,
 .path-local-pagegenerator #page-navbar {
     display: none !important;
 }
-/* Remove container constraints so the builder fills the full viewport width.
-   Targets Moodle 4.x and 5.x Boost layout wrappers. */
-.path-local-pagegenerator #page-content,
-.path-local-pagegenerator #region-main-box,
-.path-local-pagegenerator #region-main,
-.path-local-pagegenerator [role="main"],
-.path-local-pagegenerator .main-content-wrapper,
-.path-local-pagegenerator .page-content-wrapper,
-.path-local-pagegenerator #topofscroll {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: none !important;
-    width: 100% !important;
-}
 
-/* ── Body padding so Moodle's fixed navbar doesn't overlap content ── */
-.path-local-pagegenerator body {
-    padding-top: 0;
-}
-
-/* ── Outer wrapper: block layout (sidebar is fixed, so no flex needed) ── */
+/* ── Outer wrapper: flex row — sidebar left, main content right ── */
 #pagegenerator-wrap {
-    display: block;
-    min-height: calc(100vh - var(--navbar-height, 56px));
+    display: flex;
+    align-items: flex-start; /* required for sticky sidebar to work */
 }
 
-/* ── Main area: toolbar + canvas, offset right of the fixed sidebar ── */
-#pg-main {
-    margin-left: 210px;
-    transition: margin-left 300ms ease;
-}
-#pagegenerator-wrap.devpreview #pg-main {
-    margin-left: 0;
-}
-
-/* ── Left sidebar ── */
+/* ── Left sidebar: sticky so it stays visible while scrolling ── */
 #pg-sidebar {
-    position: fixed;
-    top: var(--navbar-height, 56px);          /* below Moodle navbar */
-    left: 0;
-    bottom: 0;
+    position: sticky;
+    top: var(--navbar-height, 56px);
     width: 210px;
+    min-width: 210px;
+    max-height: calc(100vh - var(--navbar-height, 56px));
     background: #464646;
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 100;
     padding: 8px 0;
-    transition: left 300ms ease;
+    flex-shrink: 0;
 }
 
-/* Collapsed state (toggled by JS in devpreview mode) */
+/* Hide sidebar in devpreview/sourcepreview modes */
 #pagegenerator-wrap.devpreview #pg-sidebar {
-    left: -210px;
+    display: none;
 }
 
 /* ── Sidebar section headers ── */
@@ -119,9 +88,8 @@
     top: -1px;
     border-radius: 3px;
 }
-/* Inline row visualisation inside sidebar */
 .pg-lyrow .pg-view {
-    display: none; /* shown only while dragging (jQuery UI clone) */
+    display: none;
 }
 
 /* ── Sidebar draggable boxes (elements) ── */
@@ -146,7 +114,7 @@
     display: none;
 }
 
-/* Sections body - hidden until header clicked */
+/* Sections body — hidden until header clicked */
 .pg-section-body {
     display: none;
 }
@@ -154,16 +122,34 @@
     display: block;
 }
 
-/* ── Canvas area (inside #pg-main, no left margin needed here) ── */
+/* ── Main area: toolbar + canvas, takes remaining width ── */
+#pg-main {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ── Toolbar navbar (top bar) ── */
+#pg-toolbar {
+    position: sticky;
+    top: var(--navbar-height, 56px);
+    z-index: 200;
+    background: #fff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ── Canvas area ── */
 #pg-canvas {
     padding: 20px;
-    min-height: calc(100vh - var(--navbar-height, 56px));
     background: #f8f9fa;
+    min-height: 400px;
 }
 
 /* ── Demo area (the droppable canvas) ── */
 .pg-demo {
-    margin-left: 0;
     margin-top: 10px;
     padding: 30px 15px 15px;
     border: 1px solid #ddd;
@@ -360,17 +346,4 @@
     box-sizing: border-box;
     font-family: monospace;
     font-size: 12px;
-}
-
-/* ── Toolbar navbar (top bar) ── */
-#pg-toolbar {
-    position: sticky;
-    top: var(--navbar-height, 56px); /* stick below Moodle's fixed navbar */
-    z-index: 200;
-    background: #fff;
-    border-bottom: 1px solid #dee2e6;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
 }
