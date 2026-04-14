@@ -111,11 +111,10 @@ define([
     }
 
     function initDraggables() {
-        // Sidebar rows → draggable into canvas
+        // Sidebar rows → draggable into canvas (whole item is the handle)
         $('#pg-sidebar .pg-lyrow').draggable({
             connectToSortable: '.pg-demo',
             helper: 'clone',
-            handle: '.pg-drag',
             start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
             drag:  function(e, ui) { ui.helper.width(420); },
             stop:  function(e, ui) {
@@ -131,11 +130,10 @@ define([
             }
         });
 
-        // Sidebar boxes → draggable into columns
+        // Sidebar boxes → draggable into columns (whole item is the handle)
         $('#pg-sidebar .pg-box').draggable({
             connectToSortable: '.column',
             helper: 'clone',
-            handle: '.pg-drag',
             start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
             drag:  function(e, ui) { ui.helper.width(420); },
             stop:  function() {
