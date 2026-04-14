@@ -10,15 +10,41 @@
  * everything so we don't pollute other pages.
  */
 
+/* ── Override Moodle page chrome ── */
+/* Hide the auto-generated page heading */
+.path-local-pagegenerator #page-header,
+.path-local-pagegenerator .page-header-headings {
+    display: none !important;
+}
+/* Remove container padding so layout goes full-width */
+.path-local-pagegenerator #region-main-box,
+.path-local-pagegenerator #region-main,
+.path-local-pagegenerator [role="main"],
+.path-local-pagegenerator .page-content-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+}
+
 /* ── Body padding so Moodle's fixed navbar doesn't overlap content ── */
 .path-local-pagegenerator body {
     padding-top: 0;
 }
 
-/* ── Outer wrapper: sidebar + canvas side by side ── */
+/* ── Outer wrapper: block layout (sidebar is fixed, so no flex needed) ── */
 #pagegenerator-wrap {
-    display: flex;
-    min-height: calc(100vh - 56px); /* 56px = Moodle Boost navbar height */
+    display: block;
+    min-height: calc(100vh - 56px);
+}
+
+/* ── Main area: toolbar + canvas, offset right of the fixed sidebar ── */
+#pg-main {
+    margin-left: 210px;
+    transition: margin-left 300ms ease;
+}
+#pagegenerator-wrap.devpreview #pg-main {
+    margin-left: 0;
 }
 
 /* ── Left sidebar ── */
@@ -122,17 +148,11 @@
     display: block;
 }
 
-/* ── Canvas area (sits to the right of the sidebar) ── */
+/* ── Canvas area (inside #pg-main, no left margin needed here) ── */
 #pg-canvas {
-    margin-left: 210px;
     padding: 20px;
-    flex: 1;
     min-height: calc(100vh - 56px);
-    transition: margin-left 300ms ease;
     background: #f8f9fa;
-}
-#pagegenerator-wrap.devpreview #pg-canvas {
-    margin-left: 0;
 }
 
 /* ── Demo area (the droppable canvas) ── */
@@ -339,7 +359,7 @@
 /* ── Toolbar navbar (top bar) ── */
 #pg-toolbar {
     position: sticky;
-    top: 0;
+    top: 56px; /* stick below Moodle's fixed navbar */
     z-index: 200;
     background: #fff;
     border-bottom: 1px solid #dee2e6;
