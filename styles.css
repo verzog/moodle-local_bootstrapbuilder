@@ -63,29 +63,25 @@
 
 /* ── Sidebar draggable rows (grid layout items) ── */
 .pg-lyrow {
-    position: relative;
-    line-height: 25px;
-    padding: 2px 8px;
+    display: flex;
+    align-items: center;
+    padding: 3px 8px;
     cursor: grab;
 }
 .pg-lyrow:hover {
     background: rgba(255,255,255,0.06);
 }
 .pg-lyrow .pg-preview {
-    display: block;
+    flex: 1;
     color: #fff;
     font-size: 12px;
-    line-height: 22px;
 }
 .pg-lyrow .pg-preview input {
-    width: 100px;
-    padding: 0 8px;
+    width: 90px;
+    padding: 0 6px;
     font-size: 10px;
-    line-height: 18px;
     height: 18px;
     border: 0;
-    position: relative;
-    top: -1px;
     border-radius: 3px;
 }
 .pg-lyrow .pg-view {
@@ -94,18 +90,16 @@
 
 /* ── Sidebar draggable boxes (elements) ── */
 .pg-box {
-    position: relative;
-    line-height: 25px;
-    width: 175px;
-    height: 25px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 3px 8px;
     cursor: grab;
 }
 .pg-box .pg-preview {
-    display: block;
+    flex: 1;
     color: #ccc;
     font-size: 12px;
-    line-height: 25px;
-    padding: 0 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
