@@ -41,7 +41,7 @@
 /* ── Outer wrapper: block layout (sidebar is fixed, so no flex needed) ── */
 #pagegenerator-wrap {
     display: block;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - var(--navbar-height, 56px));
 }
 
 /* ── Main area: toolbar + canvas, offset right of the fixed sidebar ── */
@@ -56,7 +56,7 @@
 /* ── Left sidebar ── */
 #pg-sidebar {
     position: fixed;
-    top: 56px;          /* below Moodle navbar */
+    top: var(--navbar-height, 56px);          /* below Moodle navbar */
     left: 0;
     bottom: 0;
     width: 210px;
@@ -157,7 +157,7 @@
 /* ── Canvas area (inside #pg-main, no left margin needed here) ── */
 #pg-canvas {
     padding: 20px;
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - var(--navbar-height, 56px));
     background: #f8f9fa;
 }
 
@@ -365,7 +365,7 @@
 /* ── Toolbar navbar (top bar) ── */
 #pg-toolbar {
     position: sticky;
-    top: 56px; /* stick below Moodle's fixed navbar */
+    top: var(--navbar-height, 56px); /* stick below Moodle's fixed navbar */
     z-index: 200;
     background: #fff;
     border-bottom: 1px solid #dee2e6;
