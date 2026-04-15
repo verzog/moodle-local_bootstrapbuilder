@@ -1,4 +1,4 @@
-{{!
+﻿{{!
     Template: local_pagegenerator/main
     Context:
         wwwroot       (string) Moodle wwwroot
@@ -23,10 +23,10 @@
                 <i class="fa fa-edit"></i> Edit
             </button>
             <button id="pg-devpreview" class="btn btn-sm btn-outline-secondary">
-                <i class="fa fa-eye-slash"></i> {{{str_developer}}}
+                <i class="fa fa-eye-slash"></i> {{str_developer}}
             </button>
             <button id="pg-sourcepreview" class="btn btn-sm btn-outline-secondary">
-                <i class="fa fa-eye"></i> {{{str_preview}}}
+                <i class="fa fa-eye"></i> {{str_preview}}
             </button>
         </div>
 
@@ -38,11 +38,11 @@
 
         <div class="ms-auto d-flex gap-2">
             <button id="pg-clear" class="btn btn-sm btn-outline-danger">
-                <i class="fa fa-trash"></i> {{{str_clear}}}
+                <i class="fa fa-trash"></i> {{str_clear}}
             </button>
             <button class="btn btn-sm btn-primary"
                     data-bs-toggle="modal" data-bs-target="#pg-downloadModal">
-                <i class="fa fa-chevron-down"></i> {{{str_download}}}
+                <i class="fa fa-chevron-down"></i> {{str_download}}
             </button>
         </div>
     </div>
@@ -56,10 +56,10 @@
         {{! SECTION: Grid System }}
         <div class="pg-section">
             <button class="pg-section-header" data-section="pg-grid">
-                <i class="fa fa-plus"></i> {{{str_grid}}}
+                <i class="fa fa-plus"></i> {{str_grid}}
                 <span class="float-end">
                     <i class="fa fa-question-circle text-secondary"
-                       title="{{{str_helpgrid}}}"></i>
+                       title="{{str_helpgrid}}"></i>
                 </span>
             </button>
             <div class="pg-section-body" id="pg-grid">
@@ -133,10 +133,10 @@
         {{! SECTION: Base CSS }}
         <div class="pg-section">
             <button class="pg-section-header" data-section="pg-basecss">
-                <i class="fa fa-plus"></i> {{{str_basecss}}}
+                <i class="fa fa-plus"></i> {{str_basecss}}
                 <span class="float-end">
                     <i class="fa fa-question-circle text-secondary"
-                       title="{{{str_helpbase}}}"></i>
+                       title="{{str_helpbase}}"></i>
                 </span>
             </button>
             <div class="pg-section-body" id="pg-basecss">
@@ -228,7 +228,7 @@
         {{! SECTION: JavaScript Components }}
         <div class="pg-section">
             <button class="pg-section-header" data-section="pg-jscomponents">
-                <i class="fa fa-plus"></i> {{{str_js}}}
+                <i class="fa fa-plus"></i> {{str_js}}
             </button>
             <div class="pg-section-body" id="pg-jscomponents">
 
@@ -355,7 +355,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{{str_editcontent}}}</h5>
+                <h5 class="modal-title">{{str_editcontent}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -363,9 +363,9 @@
             </div>
             <div class="modal-footer">
                 <button id="pg-savecontent" class="btn btn-primary"
-                        data-bs-dismiss="modal">{{{str_save}}}</button>
+                        data-bs-dismiss="modal">{{str_save}}</button>
                 <button class="btn btn-secondary"
-                        data-bs-dismiss="modal">{{{str_cancel}}}</button>
+                        data-bs-dismiss="modal">{{str_cancel}}</button>
             </div>
         </div>
     </div>
@@ -376,25 +376,25 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{{str_download}}}</h5>
+                <h5 class="modal-title">{{str_download}}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <p>Choose page container type:</p>
                 <div class="btn-group mb-3">
                     <button type="button" id="pg-fluidPage"
-                            class="btn btn-info active">{{{str_fluidpage}}}</button>
+                            class="btn btn-info active">{{str_fluidpage}}</button>
                     <button type="button" id="pg-fixedPage"
-                            class="btn btn-outline-info">{{{str_fixedpage}}}</button>
+                            class="btn btn-outline-info">{{str_fixedpage}}</button>
                 </div>
                 <textarea id="pg-generatedhtml" class="form-control" rows="10" readonly></textarea>
             </div>
             <div class="modal-footer">
                 <button id="pg-copyhtml" class="btn btn-secondary">
-                    <i class="fa fa-copy"></i> {{{str_copyhtml}}}
+                    <i class="fa fa-copy"></i> {{str_copyhtml}}
                 </button>
                 <button class="btn btn-primary" onclick="pgSaveHtml()">
-                    <i class="fa fa-download"></i> {{{str_download}}}
+                    <i class="fa fa-download"></i> {{str_download}}
                 </button>
             </div>
         </div>

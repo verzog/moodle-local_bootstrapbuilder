@@ -1,27 +1,36 @@
 // This file is part of Moodle - https://moodle.org/
 //
-// AMD module: local_pagegenerator/builder
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-// This is the main entry point. index.php boots it via:
-//   $PAGE->requires->js_call_amd('local_pagegenerator/builder', 'init', [config]);
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-// NOTE ON JQUERY UI:
-//   Moodle provides jQuery UI ($.fn.draggable, $.fn.sortable) via require('jqueryui').
-//   This works in Moodle 4.x but jQuery UI is deprecated there. A future version
-//   should migrate drag/drop to SortableJS or interact.js.
-//
-// NOTE ON AMD BUILD:
-//   Moodle requires compiled AMD files in amd/build/.
-//   Run:  grunt amd   (from the Moodle root with grunt-contrib-uglify installed)
-//   Or use: npx grunt --gruntfile Gruntfile.js amd
-//   The build step is REQUIRED before the plugin works in production.
-//   In development, enable "Cache Javascript" = No in Site Admin > Dev.
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+
+/**
+ * AMD module: local_pagegenerator/builder
+ *
+ * Main entry point for the Bootstrap Page Generator tool.
+ * Initialised from index.php via:
+ *   $PAGE->requires->js_call_amd('local_pagegenerator/builder', 'init', [config]);
+ *
+ * @module     local_pagegenerator/builder
+ * @copyright  2024 Bootstrap Page Generator contributors
+ * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 define([
     'jquery',
     'jqueryui',
     'core/notification',
-], function($, jqueryui, Notification) {
+    'core/str',
+], function($, jqueryui, Notification, Str) {
 
     // ── Config passed from PHP ──────────────────────────────────────────────
     var cfg = {};
@@ -34,10 +43,18 @@ define([
     var generatedHtml = '';
 
     // ── LocalStorage helpers ────────────────────────────────────────────────
+    /**
+     * Check whether the browser supports localStorage.
+     *
+     * @returns {boolean} True if localStorage is available.
+     */
     function supportsStorage() {
         return typeof window.localStorage === 'object';
     }
 
+    /**
+     * Snapshot the current canvas HTML and push it onto the undo history.
+     */
     function saveLayout() {
         var html = $('.pg-demo').html();
         if (!layoutHistory) {
@@ -52,6 +69,9 @@ define([
         }
     }
 
+    /**
+     * Restore the last saved canvas state from localStorage on page load.
+     */
     function restoreData() {
         if (!supportsStorage()) { return; }
         var stored = localStorage.getItem('pg_layoutdata');
@@ -65,6 +85,11 @@ define([
         }
     }
 
+    /**
+     * Step back one entry in the undo history.
+     *
+     * @returns {boolean} True if an undo was possible.
+     */
     function undoLayout() {
         if (!layoutHistory || layoutHistory.count < 2) { return false; }
         layoutHistory.count--;
@@ -75,6 +100,11 @@ define([
         return true;
     }
 
+    /**
+     * Step forward one entry in the undo history.
+     *
+     * @returns {boolean} True if a redo was possible.
+     */
     function redoLayout() {
         if (!layoutHistory || !layoutHistory.list[layoutHistory.count]) { return false; }
         $('.pg-demo').html(layoutHistory.list[layoutHistory.count]);
@@ -87,6 +117,9 @@ define([
 
     // Periodic save (1 second debounce)
     var lastHtml = '';
+    /**
+     * Periodic auto-save callback. Saves only when the canvas content has changed.
+     */
     function handleSaveLayout() {
         var html = $('.pg-demo').html();
         if (!stopSave && html !== lastHtml) {
@@ -98,6 +131,9 @@ define([
     }
 
     // ── Drag & Drop ─────────────────────────────────────────────────────────
+    /**
+     * Initialise the canvas and column sortable widgets.
+     */
     function initContainer() {
         // Canvas + columns are sortable
         $('.pg-demo, .pg-demo .column').sortable({
@@ -110,6 +146,10 @@ define([
         initConfigurationHandlers();
     }
 
+    /**
+     * Initialise sidebar items as jQuery UI draggables.
+     * Rows connect to the canvas sortable; boxes connect to column sortables.
+     */
     function initDraggables() {
         // Sidebar rows → draggable into canvas (whole item is the handle)
         $('#pg-sidebar .pg-lyrow').draggable({
@@ -145,6 +185,9 @@ define([
     }
 
     // ── Element removal ─────────────────────────────────────────────────────
+    /**
+     * Bind delegated click handler for removing rows and elements from the canvas.
+     */
     function initRemoveHandler() {
         // Delegated so it works on dynamically dropped elements
         $('.pg-demo').on('click', '.pg-remove', function(e) {
@@ -158,6 +201,9 @@ define([
 
     // ── Configuration toolbar handlers ──────────────────────────────────────
     // Handles the small per-element config toolbars (align, emphasis, etc.)
+    /**
+     * Bind per-element configuration toolbar handlers (alignment, emphasis, etc.).
+     */
     function initConfigurationHandlers() {
         // Simple toggle button (e.g. "Lead", "Pull Right")
         $('.pg-demo').on('click', '.pg-configuration > a', function(e) {
@@ -185,6 +231,10 @@ define([
 
     // ── Grid system generator ────────────────────────────────────────────────
     // Re-builds the .pg-view columns when the user edits the preview input.
+    /**
+     * Re-generate column divs when the user edits a grid preview input.
+     * Values must be space-separated integers that sum to 12.
+     */
     function initGridGenerator() {
         $('#pg-sidebar').on('keyup', '.pg-lyrow .pg-preview input', function() {
             var total = 0;
@@ -205,6 +255,10 @@ define([
     }
 
     // ── Section accordion in sidebar ─────────────────────────────────────────
+    /**
+     * Initialise the sidebar section accordion toggle behaviour.
+     * Opens the Grid System section by default.
+     */
     function initSidebar() {
         $('#pg-sidebar').on('click', '.pg-section-header', function() {
             var id = $(this).data('section');
@@ -222,6 +276,12 @@ define([
     // TODO: Replace the plain <textarea> with Moodle's TinyMCE 6 editor.
     //       Use editor_textarea_use_editor() in PHP + require('editor_tiny/editor')
     //       in this AMD module to initialise it on modal open.
+    /**
+     * Initialise the content editor modal (open/save cycle).
+     *
+     * TODO: Replace the plain textarea with Moodle TinyMCE 6 via
+     *       editor_textarea_use_editor() in PHP + require('editor_tiny/editor').
+     */
     function initEditorModal() {
         // Open: populate textarea from the element's .pg-view
         $('#pagegenerator-wrap').on('click', '[data-bs-target="#pg-editorModal"]', function(e) {
@@ -239,6 +299,10 @@ define([
     }
 
     // ── Download / HTML generation ───────────────────────────────────────────
+    /**
+     * Generate clean Bootstrap 5 HTML from the current canvas and populate
+     * the download modal textarea.
+     */
     function downloadLayoutSrc() {
         var $layout = $('#pg-download-layout');
         $layout.children().html($('.pg-demo').html());
@@ -268,15 +332,18 @@ define([
     }
 
     // Copy to clipboard
+    /**
+     * Bind the Copy HTML button in the download modal.
+     */
     function initCopyButton() {
         $('#pg-copyhtml').on('click', function() {
             var text = $('#pg-generatedhtml').val();
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(function() {
-                    Notification.addNotification({
-                        message: 'HTML copied to clipboard!',
-                        type: 'success'
-                    });
+                    Str.get_string('copiedtoclipboard', 'local_pagegenerator').then(function(s) {
+                        Notification.addNotification({message: s, type: 'success'});
+                        return;
+                    }).catch(Notification.exception);
                 });
             } else {
                 // Fallback for older browsers
@@ -289,6 +356,12 @@ define([
 
     // ── Save as .html file (uses FileSaver pattern) ──────────────────────────
     // Called by the Download button's onclick="pgSaveHtml()"
+    /**
+     * Trigger a browser file download of the generated HTML page.
+     * Exposed on window so it can be called from an inline onclick in the template.
+     *
+     * @global
+     */
     window.pgSaveHtml = function() {
         var html = [
             '<!DOCTYPE html>',
@@ -316,6 +389,9 @@ define([
     };
 
     // ── View mode toggles ────────────────────────────────────────────────────
+    /**
+     * Bind the Edit / Developer / Preview mode toggle buttons.
+     */
     function initViewModes() {
         var $wrap = $('#pagegenerator-wrap');
 
@@ -339,12 +415,22 @@ define([
     }
 
     // ── Canvas resize (simulates viewport sizes) ──────────────────────────────
+    /**
+     * Resize the canvas to simulate a viewport breakpoint.
+     * Exposed on window so it can be called from inline onclick in the template.
+     *
+     * @global
+     * @param {string} size - Breakpoint key: 'lg', 'md', 'sm', or 'xs'.
+     */
     window.pgResizeCanvas = function(size) {
         var sizes = {lg: '100%', md: '992px', sm: '768px', xs: '480px'};
         $('#pg-canvas .pg-demo').css('max-width', sizes[size] || '100%');
     };
 
     // ── Toolbar buttons ──────────────────────────────────────────────────────
+    /**
+     * Bind toolbar button handlers: clear, undo, redo, download modal, fluid/fixed toggle.
+     */
     function initToolbar() {
         $('#pg-clear').on('click', function() {
             clearDemo();
@@ -379,6 +465,9 @@ define([
     }
 
     // ── Clear ────────────────────────────────────────────────────────────────
+    /**
+     * Clear the canvas and reset undo history.
+     */
     function clearDemo() {
         $('.pg-demo').empty();
         layoutHistory = null;
@@ -386,16 +475,28 @@ define([
     }
 
     // ── JS ID handlers (prevent duplicate IDs when components are dropped) ───
+    /**
+     * Assign unique IDs to all JS component instances in the canvas.
+     * Called after a box is dropped to prevent duplicate IDs.
+     */
     function handleJsIds() {
         handleModalIds();
         handleAccordionIds();
         handleTabsIds();
     }
 
+    /**
+     * Generate a random 6-digit integer for use in unique IDs.
+     *
+     * @returns {number} A random integer between 0 and 999999.
+     */
     function randomId() {
         return Math.floor(Math.random() * 1000000);
     }
 
+    /**
+     * Reassign unique IDs to accordion components dropped into the canvas.
+     */
     function handleAccordionIds() {
         $('.pg-demo #myAccordion').each(function() {
             var newId = 'accordion-' + randomId();
@@ -417,6 +518,9 @@ define([
         });
     }
 
+    /**
+     * Reassign unique IDs to modal components dropped into the canvas.
+     */
     function handleModalIds() {
         $('.pg-demo #myModalLink').each(function() {
             var modalId = 'modal-' + randomId();
@@ -426,6 +530,9 @@ define([
         });
     }
 
+    /**
+     * Reassign unique IDs to tab components dropped into the canvas.
+     */
     function handleTabsIds() {
         $('.pg-demo #myTabs').each(function() {
             var newId = 'tabs-' + randomId();
