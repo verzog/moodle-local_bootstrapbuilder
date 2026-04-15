@@ -225,6 +225,97 @@
             </div>{{! /pg-basecss }}
         </div>{{! /pg-section Base CSS }}
 
+        {{! SECTION: Forms }}
+        <div class="pg-section">
+            <button class="pg-section-header" data-section="pg-forms">
+                <i class="fa fa-plus"></i> {{str_forms}}
+            </button>
+            <div class="pg-section-body" id="pg-forms">
+
+                {{! Text Input }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Text Input</div>
+                    <div class="pg-view">
+                        <div class="mb-3">
+                            <label class="form-label" contenteditable="true">Label</label>
+                            <input type="text" class="form-control" placeholder="Enter text...">
+                        </div>
+                    </div>
+                </div>
+
+                {{! Select }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Select</div>
+                    <div class="pg-view">
+                        <div class="mb-3">
+                            <label class="form-label" contenteditable="true">Select option</label>
+                            <select class="form-select">
+                                <option>Option 1</option>
+                                <option>Option 2</option>
+                                <option>Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Textarea }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Textarea</div>
+                    <div class="pg-view">
+                        <div class="mb-3">
+                            <label class="form-label" contenteditable="true">Comments</label>
+                            <textarea class="form-control" rows="3" placeholder="Enter your text..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Checkboxes }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Checkboxes</div>
+                    <div class="pg-view">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check1">
+                                <label class="form-check-label" for="check1" contenteditable="true">Option one</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="check2">
+                                <label class="form-check-label" for="check2" contenteditable="true">Option two</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{! Radio Buttons }}
+                <div class="pg-box pg-box-element ui-draggable">
+                    <a href="#" class="pg-remove badge bg-danger"><i class="fa fa-times"></i> Remove</a>
+                    <span class="pg-drag badge bg-secondary"><i class="fa fa-arrows-alt"></i> Drag</span>
+                    <div class="pg-preview">Radio Buttons</div>
+                    <div class="pg-view">
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radios" id="radio1">
+                                <label class="form-check-label" for="radio1" contenteditable="true">Option one</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radios" id="radio2">
+                                <label class="form-check-label" for="radio2" contenteditable="true">Option two</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{! /pg-forms }}
+        </div>{{! /pg-section Forms }}
+
         {{! SECTION: JavaScript Components }}
         <div class="pg-section">
             <button class="pg-section-header" data-section="pg-jscomponents">
