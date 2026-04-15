@@ -155,25 +155,44 @@ define([
         $('#pg-sidebar .pg-lyrow').draggable({
             connectToSortable: '.pg-demo',
             helper: 'clone',
+            appendTo: 'body',
             start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
             drag:  function(e, ui) { ui.helper.width(420); },
             stop:  function(e, ui) {
-                // After drop, make the new columns sortable too
+                // Make new columns sortable, then re-init box draggables so
+                // they can connect to the newly created columns.
                 $('.pg-demo .column').sortable({
                     opacity: 0.35,
                     connectWith: '.column',
                     start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
                     stop:  function() { if (stopSave > 0) { stopSave--; } startDrag = 0; }
                 });
+                initBoxDraggables();
                 if (stopSave > 0) { stopSave--; }
                 startDrag = 0;
             }
         });
 
-        // Sidebar boxes → draggable into columns (whole item is the handle)
+        initBoxDraggables();
+    }
+
+    /**
+     * Initialise (or re-initialise) sidebar box draggables.
+     * Called at startup and after every row drop so boxes can connect to
+     * any newly created .column sortables on the canvas.
+     */
+    function initBoxDraggables() {
+        // Destroy existing draggable first to avoid double-binding.
+        $('#pg-sidebar .pg-box').each(function() {
+            if ($(this).data('ui-draggable')) {
+                $(this).draggable('destroy');
+            }
+        });
+
         $('#pg-sidebar .pg-box').draggable({
             connectToSortable: '.column',
             helper: 'clone',
+            appendTo: 'body',
             start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
             drag:  function(e, ui) { ui.helper.width(420); },
             stop:  function() {
