@@ -39,9 +39,9 @@ No content is stored in the database — the tool is a design aid, not a content
    ```bash
    git clone https://github.com/verzog/moodle-local_bootstrapbuilder.git local_bootstrapbuilder
    ```
-2. Copy the `local_bootstrapbuilder` folder into your Moodle installation's `local/` directory:
+2. Copy the `local_bootstrapbuilder` folder into your Moodle installation's `local/` directory **without** the `local_` prefix:
    ```
-   {moodle_root}/local/local_bootstrapbuilder/
+   {moodle_root}/local/bootstrapbuilder/
    ```
 3. Log in to Moodle as an administrator and go to **Site Administration → Notifications** to trigger the plugin installer.
 
@@ -50,7 +50,7 @@ No content is stored in the database — the tool is a design aid, not a content
 The plugin ships with an unminified copy of the AMD module in `amd/build/` which works when JavaScript caching is disabled. For production use, compile a proper minified build from the Moodle root:
 
 ```bash
-grunt amd --root=local/local_bootstrapbuilder
+grunt amd --root=local/bootstrapbuilder
 ```
 
 During development, disable caching at **Site Administration → Development → Debugging → Cache JavaScript = No**.
