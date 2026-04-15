@@ -17,14 +17,14 @@
 /**
  * Plugin version information.
  *
- * @package    local_pagegenerator
+ * @package    local_bootstrapbuilder
  * @copyright  2024 Bootstrap Page Generator contributors
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'local_pagegenerator';
+$plugin->component = 'local_bootstrapbuilder';
 $plugin->version   = 2024041400;
 $plugin->requires  = 2022041900; // Moodle 4.1 minimum.
 $plugin->release   = '1.0.0';

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for local_pagegenerator.
+ * Capability definitions for local_bootstrapbuilder.
  *
- * @package    local_pagegenerator
+ * @package    local_bootstrapbuilder
  * @copyright  2024 Bootstrap Page Generator contributors
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $capabilities = [
     // Who can open and use the page builder tool.
-    'local/pagegenerator:use' => [
+    'local/bootstrapbuilder:use' => [
         'captype'      => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
         'archetypes'   => [

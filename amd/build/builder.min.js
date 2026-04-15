@@ -14,13 +14,13 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * AMD module: local_pagegenerator/builder
+ * AMD module: local_bootstrapbuilder/builder
  *
  * Main entry point for the Bootstrap Page Generator tool.
  * Initialised from index.php via:
- *   $PAGE->requires->js_call_amd('local_pagegenerator/builder', 'init', [config]);
+ *   $PAGE->requires->js_call_amd('local_bootstrapbuilder/builder', 'init', [config]);
  *
- * @module     local_pagegenerator/builder
+ * @module     local_bootstrapbuilder/builder
  * @copyright  2024 Bootstrap Page Generator contributors
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -284,7 +284,7 @@ define([
      */
     function initEditorModal() {
         // Open: populate textarea from the element's .pg-view
-        $('#pagegenerator-wrap').on('click', '[data-bs-target="#pg-editorModal"]', function(e) {
+        $('#bootstrapbuilder-wrap').on('click', '[data-bs-target="#pg-editorModal"]', function(e) {
             e.preventDefault();
             currentEditor = $(this).closest('.pg-box-element').find('.pg-view');
             $('#pg-contenteditor').val(currentEditor.html());
@@ -340,7 +340,7 @@ define([
             var text = $('#pg-generatedhtml').val();
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(text).then(function() {
-                    Str.get_string('copiedtoclipboard', 'local_pagegenerator').then(function(s) {
+                    Str.get_string('copiedtoclipboard', 'local_bootstrapbuilder').then(function(s) {
                         Notification.addNotification({message: s, type: 'success'});
                         return;
                     }).catch(Notification.exception);
@@ -393,7 +393,7 @@ define([
      * Bind the Edit / Developer / Preview mode toggle buttons.
      */
     function initViewModes() {
-        var $wrap = $('#pagegenerator-wrap');
+        var $wrap = $('#bootstrapbuilder-wrap');
 
         $('#pg-edit').on('click', function() {
             $wrap.removeClass('devpreview sourcepreview').addClass('edit');

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
 
 /**
- * English language strings for local_pagegenerator.
+ * English language strings for local_bootstrapbuilder.
  *
- * @package    local_pagegenerator
+ * @package    local_bootstrapbuilder
  * @copyright  2024 Bootstrap Page Generator contributors
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['pluginname']         = 'Bootstrap Page Generator';
 $string['pluginname_desc']    = 'Drag-and-drop Bootstrap 5 page builder. Build a layout visually, then copy or download the generated HTML.';
-$string['local_pagegenerator:use'] = 'Use the Bootstrap Page Generator';
+$string['local_bootstrapbuilder:use'] = 'Use the Bootstrap Page Generator';
 
 // UI strings
 $string['gridsystem']         = 'Grid System';

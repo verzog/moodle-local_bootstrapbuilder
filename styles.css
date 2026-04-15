@@ -1,23 +1,23 @@
 /*
- * local_pagegenerator/styles.css
+ * local_bootstrapbuilder/styles.css
  *
  * Uses only Moodle's Bootstrap 5 utilities where possible;
  * custom rules only for layout specifics Bootstrap can't express inline.
  *
- * Loaded automatically by Moodle for every page. The #pagegenerator-wrap
+ * Loaded automatically by Moodle for every page. The #bootstrapbuilder-wrap
  * selector scopes everything so we don't pollute other pages.
  */
 
 /* ── Hide Moodle's auto-generated page heading ── */
-.path-local-pagegenerator #page-header,
-.path-local-pagegenerator .page-header-headings,
-.path-local-pagegenerator .header-maxwidth,
-.path-local-pagegenerator #page-navbar {
+.path-local-bootstrapbuilder #page-header,
+.path-local-bootstrapbuilder .page-header-headings,
+.path-local-bootstrapbuilder .header-maxwidth,
+.path-local-bootstrapbuilder #page-navbar {
     display: none !important;
 }
 
 /* ── Outer wrapper: flex column — toolbar on top, body below ── */
-#pagegenerator-wrap {
+#bootstrapbuilder-wrap {
     display: flex;
     flex-direction: column;
 }
@@ -38,7 +38,7 @@
 }
 
 /* Hide sidebar in devpreview/sourcepreview modes */
-#pagegenerator-wrap.devpreview #pg-sidebar {
+#bootstrapbuilder-wrap.devpreview #pg-sidebar {
     display: none;
 }
 
@@ -313,46 +313,46 @@
 
 /* ── Preview modes ── */
 /* Developer mode: hide builder chrome, show clean page */
-#pagegenerator-wrap.devpreview .pg-remove,
-#pagegenerator-wrap.devpreview .pg-drag,
-#pagegenerator-wrap.devpreview .pg-configuration,
-#pagegenerator-wrap.devpreview .pg-preview {
+#bootstrapbuilder-wrap.devpreview .pg-remove,
+#bootstrapbuilder-wrap.devpreview .pg-drag,
+#bootstrapbuilder-wrap.devpreview .pg-configuration,
+#bootstrapbuilder-wrap.devpreview .pg-preview {
     display: none !important;
 }
-#pagegenerator-wrap.devpreview .pg-demo .pg-row-block {
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block {
     background: none;
     border: none;
     padding: 0;
     margin: 0;
 }
-#pagegenerator-wrap.devpreview .pg-demo .pg-row-block::before {
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block::before {
     display: none;
 }
-#pagegenerator-wrap.devpreview .pg-demo .column {
+#bootstrapbuilder-wrap.devpreview .pg-demo .column {
     background: none;
     border: none;
     padding-top: 16px;
     padding-bottom: 16px;
 }
-#pagegenerator-wrap.devpreview .pg-demo .column::after {
+#bootstrapbuilder-wrap.devpreview .pg-demo .column::after {
     display: none;
 }
-#pagegenerator-wrap.devpreview .pg-demo .pg-box-element {
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-box-element {
     padding-top: 0;
 }
 
 /* Source preview: strip all box chrome */
-#pagegenerator-wrap.sourcepreview .pg-demo .column,
-#pagegenerator-wrap.sourcepreview .pg-demo .pg-row-block,
-#pagegenerator-wrap.sourcepreview .pg-demo .pg-box-element {
+#bootstrapbuilder-wrap.sourcepreview .pg-demo .column,
+#bootstrapbuilder-wrap.sourcepreview .pg-demo .pg-row-block,
+#bootstrapbuilder-wrap.sourcepreview .pg-demo .pg-box-element {
     margin: 0;
     padding: 0;
     background: none;
     border: none;
     box-shadow: none;
 }
-#pagegenerator-wrap.sourcepreview .pg-demo .pg-row-block::before,
-#pagegenerator-wrap.sourcepreview .pg-demo .column::after {
+#bootstrapbuilder-wrap.sourcepreview .pg-demo .pg-row-block::before,
+#bootstrapbuilder-wrap.sourcepreview .pg-demo .column::after {
     display: none;
 }
 
