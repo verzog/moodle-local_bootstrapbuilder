@@ -338,8 +338,10 @@
     border-style: solid;
     border-color: var(--pg-teal);
 }
+/* Row label is now a real DOM toolbar (.pg-row-toolbar) injected by
+ * builder.js so the "+ col" button is clickable. Hide the CSS fallback. */
 .pg-demo .pg-row-block::before {
-    content: "Row";
+    content: none;
 }
 
 /* ── Columns in the canvas ──
@@ -406,6 +408,74 @@
     color: var(--pg-purple-deep);
     cursor: pointer;
     outline: none;
+}
+
+/* ── Row toolbar (label + "add column" button) ──
+ * Absolutely positioned so it doesn't flex-layout with the columns.
+ */
+.pg-demo .pg-row-toolbar {
+    position: absolute;
+    top: -23px;
+    left: 12px;
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    background: var(--pg-label-bg);
+    z-index: 2;
+}
+.pg-demo .pg-row-label {
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pg-label-color);
+    letter-spacing: 0.2px;
+}
+.pg-demo .pg-row-add {
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--pg-teal);
+    color: #fff !important;
+    border-left: 1px solid var(--pg-border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 150ms ease;
+}
+.pg-demo .pg-row-add:hover {
+    background: var(--pg-teal-hover);
+    text-decoration: none;
+}
+
+/* ── Column remove button (× top-right of column) ── */
+.pg-demo .pg-col-remove {
+    position: absolute;
+    top: -23px;
+    right: 12px;
+    min-width: 22px;
+    padding: 3px 8px;
+    line-height: 1;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--pg-label-bg);
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--pg-label-color);
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    z-index: 2;
+    transition: background 150ms ease, color 150ms ease;
+}
+.pg-demo .pg-col-remove:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff !important;
+    text-decoration: none;
 }
 
 /* ── Box elements inside columns ── */

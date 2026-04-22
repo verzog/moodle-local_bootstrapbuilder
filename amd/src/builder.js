@@ -130,20 +130,44 @@ define([
         }
     }
 
-    // ── Column width badges ──────────────────────────────────────────────────
-    // Each canvas .column gets a clickable "col-N" badge that opens an inline
-    // <select> to change the Bootstrap column width.
+    // ── Row and column edit badges ───────────────────────────────────────────
+    // Each canvas .pg-row-block gets a toolbar with a "+ col" button so users
+    // can add columns; each .column gets a clickable "col-N" badge (click to
+    // resize) plus a "×" remove button.
     /**
-     * Inject a .pg-col-badge span into every canvas column that doesn't
-     * already have one, reflecting the current col-N class.
+     * Inject a .pg-col-badge span and .pg-col-remove button into every
+     * canvas column that doesn't already have them.
      */
     function applyColumnBadges() {
         $('.pg-demo .column').each(function() {
             var $col = $(this);
-            if ($col.children('.pg-col-badge').length) { return; }
-            var val = readColWidth($col);
-            $col.prepend(
-                $('<span class="pg-col-badge" title="Click to change column width">col-' + val + '</span>')
+            if (!$col.children('.pg-col-badge').length) {
+                var val = readColWidth($col);
+                $col.prepend(
+                    $('<span class="pg-col-badge" title="Click to change column width">col-' + val + '</span>')
+                );
+            }
+            if (!$col.children('.pg-col-remove').length) {
+                $col.prepend(
+                    $('<a href="#" class="pg-col-remove" title="Remove column">&times;</a>')
+                );
+            }
+        });
+    }
+
+    /**
+     * Inject a row toolbar (label + "add column" button) on every canvas
+     * row that doesn't already have one.
+     */
+    function applyRowBadges() {
+        $('.pg-demo .pg-row-block').each(function() {
+            var $row = $(this);
+            if ($row.children('.pg-row-toolbar').length) { return; }
+            $row.prepend(
+                $('<span class="pg-row-toolbar">' +
+                    '<span class="pg-row-label">Row</span>' +
+                    '<a href="#" class="pg-row-add" title="Add column">+ col</a>' +
+                  '</span>')
             );
         });
     }
@@ -166,6 +190,25 @@ define([
      */
     function refreshColumnBadge($col) {
         $col.children('.pg-col-badge').first().text('col-' + readColWidth($col));
+    }
+
+    /**
+     * Delegated click handlers for row "+ col" and column "×" buttons.
+     * Adds a new col-2 column at the end of the row, or removes the
+     * clicked column from its row.
+     */
+    function initRowColumnEditors() {
+        $('.pg-demo').on('click', '.pg-row-add', function(e) {
+            e.preventDefault();
+            var $row = $(this).closest('.pg-row-block');
+            $row.append($('<div class="col-2 column"></div>'));
+            applyColumnBadges();
+        });
+
+        $('.pg-demo').on('click', '.pg-col-remove', function(e) {
+            e.preventDefault();
+            $(this).closest('.column').remove();
+        });
     }
 
     /**
@@ -268,6 +311,7 @@ define([
                     }
                 });
                 initBoxDraggables();
+                applyRowBadges();
                 applyColumnBadges();
                 if (stopSave > 0) { stopSave--; }
                 startDrag = 0;
@@ -435,7 +479,7 @@ define([
         var $t = $layout.children();
 
         // Strip builder chrome
-        $t.find('.pg-preview, .pg-configuration, .pg-drag, .pg-remove, .pg-col-badge').remove();
+        $t.find('.pg-preview, .pg-configuration, .pg-drag, .pg-remove, .pg-col-badge, .pg-col-remove, .pg-row-toolbar').remove();
 
         // Unwrap lyrow/box-element wrappers (leave only the row/col structure)
         $t.find('.pg-lyrow, .pg-box-element').each(function() {
@@ -563,12 +607,12 @@ define([
         });
         $('#pg-undo').on('click', function() {
             stopSave++;
-            if (undoLayout()) { initContainer(); applyColumnBadges(); }
+            if (undoLayout()) { initContainer(); applyRowBadges(); applyColumnBadges(); }
             stopSave--;
         });
         $('#pg-redo').on('click', function() {
             stopSave++;
-            if (redoLayout()) { initContainer(); applyColumnBadges(); }
+            if (redoLayout()) { initContainer(); applyRowBadges(); applyColumnBadges(); }
             stopSave--;
         });
 
@@ -691,6 +735,8 @@ define([
             initToolbar();
             initCopyButton();
             initColumnWidthEditor();
+            initRowColumnEditors();
+            applyRowBadges();
             applyColumnBadges();
 
             // Auto-save every second
