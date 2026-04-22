@@ -261,6 +261,41 @@
     min-height: 240px;
 }
 
+/* ── Dropped .pg-lyrow row wrapper on the canvas ──
+ * The sidebar rule makes .pg-lyrow a small flex item; on the canvas we
+ * need it to be a full-width block so its .pg-view row takes the whole
+ * container. position:relative anchors the absolute drag/remove badges
+ * to the row itself rather than bubbling up to .pg-demo.
+ */
+.pg-demo .pg-lyrow {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 34px 0 0;
+    cursor: default;
+    background: transparent;
+}
+.pg-demo .pg-lyrow:first-child {
+    margin-top: 0;
+}
+/* Hide the grid-input preview once the row is on the canvas — users
+ * configure column widths on the column itself, not on the sidebar row. */
+.pg-demo .pg-lyrow .pg-preview {
+    display: none !important;
+}
+.pg-demo .pg-lyrow .pg-view,
+.pg-demo .pg-lyrow .pg-view > .pg-row-block {
+    display: block;
+    width: 100%;
+}
+/* Keep the flex layout on the inner row so col-X widths apply */
+.pg-demo .pg-lyrow .pg-view > .pg-row-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
 /* Tab-style labels on Container / Row / Column */
 .pg-demo::after,
 .pg-demo .pg-row-block::before,
@@ -303,8 +338,10 @@
     border-style: solid;
     border-color: var(--pg-teal);
 }
+/* Row label is now a real DOM toolbar (.pg-row-toolbar) injected by
+ * builder.js so the "+ col" button is clickable. Hide the CSS fallback. */
 .pg-demo .pg-row-block::before {
-    content: "Row";
+    content: none;
 }
 
 /* ── Columns in the canvas ──
@@ -329,8 +366,116 @@
     border-style: solid;
     border-color: var(--pg-teal);
 }
+/* Column label is now a real DOM element (.pg-col-badge) injected by
+ * builder.js so it's clickable. Hide the generic ::after fallback. */
 .pg-demo .column::after {
-    content: "Column";
+    content: none;
+}
+
+/* ── Column width badge ──
+ * Clickable tab-style badge on each canvas column. Clicking it opens an
+ * inline <select> that updates the Bootstrap col-N class.
+ */
+.pg-demo .pg-col-badge {
+    position: absolute;
+    top: -23px;
+    left: 12px;
+    background: var(--pg-label-bg);
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--pg-label-color);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 150ms ease, color 150ms ease;
+}
+.pg-demo .pg-col-badge:hover {
+    background: var(--pg-teal);
+    color: #fff;
+    border-color: var(--pg-teal);
+}
+.pg-demo .pg-col-badge select.pg-col-select {
+    appearance: auto;
+    font-size: 11px;
+    padding: 1px 4px;
+    border: 1px solid var(--pg-teal);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--pg-purple-deep);
+    cursor: pointer;
+    outline: none;
+}
+
+/* ── Row toolbar (label + "add column" button) ──
+ * Absolutely positioned so it doesn't flex-layout with the columns.
+ */
+.pg-demo .pg-row-toolbar {
+    position: absolute;
+    top: -23px;
+    left: 12px;
+    display: inline-flex;
+    align-items: stretch;
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    background: var(--pg-label-bg);
+    z-index: 2;
+}
+.pg-demo .pg-row-label {
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--pg-label-color);
+    letter-spacing: 0.2px;
+}
+.pg-demo .pg-row-add {
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--pg-teal);
+    color: #fff !important;
+    border-left: 1px solid var(--pg-border);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 150ms ease;
+}
+.pg-demo .pg-row-add:hover {
+    background: var(--pg-teal-hover);
+    text-decoration: none;
+}
+
+/* ── Column remove button (× top-right of column) ── */
+.pg-demo .pg-col-remove {
+    position: absolute;
+    top: -23px;
+    right: 12px;
+    min-width: 22px;
+    padding: 3px 8px;
+    line-height: 1;
+    font-size: 13px;
+    font-weight: 700;
+    background: var(--pg-label-bg);
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--pg-label-color);
+    text-align: center;
+    cursor: pointer;
+    text-decoration: none;
+    user-select: none;
+    z-index: 2;
+    transition: background 150ms ease, color 150ms ease;
+}
+.pg-demo .pg-col-remove:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff !important;
+    text-decoration: none;
 }
 
 /* ── Box elements inside columns ── */
