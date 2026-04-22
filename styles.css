@@ -1,12 +1,29 @@
 /*
  * local_bootstrapbuilder/styles.css
  *
- * Uses only Moodle's Bootstrap 5 utilities where possible;
- * custom rules only for layout specifics Bootstrap can't express inline.
- *
- * Loaded automatically by Moodle for every page. The #bootstrapbuilder-wrap
- * selector scopes everything so we don't pollute other pages.
+ * Scoped under #bootstrapbuilder-wrap / .path-local-bootstrapbuilder so this
+ * never leaks into other Moodle pages.
  */
+
+/* ── Palette ───────────────────────────────────────────────────────────────
+ * Central colour tokens so we can re-skin the tool from one place.
+ * Purple toolbar + sidebar, teal drag accents, light canvas.
+ */
+:root {
+    --pg-purple: #3d2a5a;
+    --pg-purple-deep: #2a1a3f;
+    --pg-purple-soft: #4a3568;
+    --pg-teal: #26a69a;
+    --pg-teal-hover: #1e8a80;
+    --pg-canvas-bg: #f4f1f7;
+    --pg-row-bg: #f6f4f9;
+    --pg-border: #dcd6e4;
+    --pg-border-strong: #b9afc9;
+    --pg-label-bg: #ebe6f1;
+    --pg-label-color: #6c6379;
+    --pg-drop-accent: #26a69a;
+    --pg-drop-tint: rgba(38, 166, 154, 0.12);
+}
 
 /* ── Hide Moodle's auto-generated page heading ── */
 .path-local-bootstrapbuilder #page-header,
@@ -20,20 +37,73 @@
 #bootstrapbuilder-wrap {
     display: flex;
     flex-direction: column;
+    background: var(--pg-canvas-bg);
 }
 
-/* ── Left sidebar: sticky so it stays visible while scrolling ── */
-#pg-sidebar {
+/* ── Toolbar (top bar) ── */
+#pg-toolbar {
     position: sticky;
     top: var(--navbar-height, 56px);
-    width: 210px;
-    min-width: 210px;
-    max-height: calc(100vh - var(--navbar-height, 56px));
-    background: #464646;
+    z-index: 200;
+    background: var(--pg-purple);
+    color: #fff;
+    border-bottom: 1px solid var(--pg-purple-deep);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+#pg-toolbar .btn {
+    border-radius: 999px;
+    padding: 4px 14px;
+    font-size: 13px;
+    border: none;
+    color: var(--pg-purple);
+    background: #fff;
+    transition: background 150ms ease, color 150ms ease, transform 120ms ease;
+}
+#pg-toolbar .btn:hover {
+    background: #f0eaf7;
+    transform: translateY(-1px);
+}
+#pg-toolbar .btn.active,
+#pg-toolbar .btn-primary {
+    background: #fff;
+    color: var(--pg-purple);
+}
+#pg-toolbar .btn-outline-danger {
+    background: transparent;
+    color: #ffb3b3;
+    border: 1px solid #ffb3b3;
+}
+#pg-toolbar .btn-outline-danger:hover {
+    background: #ffb3b3;
+    color: var(--pg-purple);
+}
+#pg-toolbar .btn-group {
+    gap: 6px;
+}
+
+/* ── Body row: sidebar + canvas side by side ── */
+#pg-main {
+    display: flex;
+    align-items: flex-start; /* required for sticky sidebar */
+    flex: 1;
+}
+
+/* ── Left sidebar ── */
+#pg-sidebar {
+    position: sticky;
+    top: calc(var(--navbar-height, 56px) + 52px);
+    width: 150px;
+    min-width: 150px;
+    max-height: calc(100vh - var(--navbar-height, 56px) - 52px);
+    background: var(--pg-purple-deep);
     overflow-y: auto;
     overflow-x: hidden;
     z-index: 100;
-    padding: 8px 0;
+    padding: 14px 10px;
     flex-shrink: 0;
 }
 
@@ -44,93 +114,115 @@
 
 /* ── Sidebar section headers ── */
 .pg-section-header {
-    display: block;
-    padding: 6px 15px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #fff;
-    text-transform: uppercase;
-    cursor: pointer;
-    user-select: none;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-}
-.pg-section-header:hover {
-    background: rgba(255,255,255,0.08);
-}
-
-/* ── Sidebar draggable rows (grid layout items) ── */
-.pg-lyrow {
     display: flex;
     align-items: center;
-    padding: 3px 8px;
-    cursor: grab;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    margin: 12px 0 6px;
+    padding: 4px 8px;
+    color: rgba(255,255,255,0.7);
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: left;
 }
-.pg-lyrow:hover {
+.pg-section-header i {
+    font-size: 13px;
+}
+.pg-section-header:hover {
+    color: #fff;
     background: rgba(255,255,255,0.06);
 }
-.pg-lyrow .pg-preview {
-    flex: 1;
-    color: #fff;
-    font-size: 12px;
-}
-.pg-lyrow .pg-preview input {
-    width: 90px;
-    padding: 0 6px;
-    font-size: 10px;
-    height: 18px;
-    border: 0;
-    border-radius: 3px;
-}
-.pg-lyrow .pg-view {
-    display: none;
-}
 
-/* ── Sidebar draggable boxes (elements) ── */
+/* ── Sidebar draggable items ───────────────────────────────────────────── */
+.pg-lyrow,
 .pg-box {
     display: flex;
     align-items: center;
+    gap: 6px;
     width: 100%;
-    padding: 3px 8px;
+    margin: 6px 0;
+    padding: 0;
     cursor: grab;
-}
-.pg-box .pg-preview {
-    flex: 1;
-    color: #ccc;
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-.pg-box .pg-view {
-    display: none;
+    background: transparent;
 }
 
-/* Hide canvas-only controls inside the sidebar — they appear after drop */
+/* Hide the live .pg-view and canvas-only controls in the sidebar */
+#pg-sidebar .pg-lyrow .pg-view,
+#pg-sidebar .pg-box .pg-view,
 #pg-sidebar .pg-remove,
 #pg-sidebar .pg-configuration {
     display: none !important;
 }
 
-/* Drag icon in sidebar: show inline (not absolute) so it doesn't overlap */
+/* Grid row preview input — compact next to the drag pill */
+#pg-sidebar .pg-lyrow .pg-preview {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+}
+#pg-sidebar .pg-lyrow .pg-preview input {
+    width: 52px;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+}
+#pg-sidebar .pg-lyrow .pg-preview input:focus {
+    outline: none;
+    background: #fff;
+    color: var(--pg-purple-deep);
+    border-color: var(--pg-teal);
+}
+
+/* Box component label (e.g. "Button", "Panel") */
+#pg-sidebar .pg-box .pg-preview {
+    flex: 1;
+    margin: 0;
+    color: rgba(255,255,255,0.85);
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* The drag pill itself — prominent, pill-shaped, teal */
 #pg-sidebar .pg-drag {
     position: static;
-    display: inline-block;
-    opacity: 0.5;
-    font-size: 10px;
-    vertical-align: middle;
-    margin-right: 4px;
-    background: none !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 56px;
+    height: 26px;
+    padding: 0 10px;
+    border-radius: 999px;
+    background: var(--pg-teal) !important;
+    color: #fff !important;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    opacity: 1;
     border: none !important;
-    padding: 0 !important;
-    color: #aaa !important;
-    /* Hide the "Drag" text, keep only the icon */
-    font-size: 0;
+    text-transform: lowercase;
+    transition: background 150ms ease, transform 120ms ease;
+}
+#pg-sidebar .pg-drag:hover {
+    background: var(--pg-teal-hover) !important;
+    transform: translateY(-1px);
 }
 #pg-sidebar .pg-drag i {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 /* Sections body — hidden until header clicked */
@@ -141,128 +233,108 @@
     display: block;
 }
 
-/* ── Body row: sidebar + canvas side by side ── */
-#pg-main {
-    display: flex;
-    align-items: flex-start; /* required for sticky sidebar */
-    flex: 1;
-}
-
-/* ── Toolbar navbar (top bar) ── */
-#pg-toolbar {
-    position: sticky;
-    top: var(--navbar-height, 56px);
-    z-index: 200;
-    background: #fff;
-    border-bottom: 1px solid #dee2e6;
-    padding: 6px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* ── Canvas area ── */
+/* ── Canvas area ──
+ * The canvas background mimics a Moodle page so content inside renders
+ * at real scale and with real theme styling. We only add minimal
+ * dashed outlines around rows/columns as edit-mode guides.
+ */
 #pg-canvas {
     flex: 1;
     min-width: 0;
-    padding: 24px;
-    background: #f4f6f8;
+    padding: 28px 32px;
+    background: var(--pg-canvas-bg);
     min-height: 400px;
 }
 
-/* ── Demo area (the droppable canvas) ── */
+/* ── Demo area (the droppable canvas / container) ──
+ * Transparent white with a thin outline; content inside renders with
+ * Moodle's Bootstrap theme so users see the real appearance.
+ */
 .pg-demo {
-    margin-top: 10px;
-    padding: 40px 24px 24px;
-    border: 1px solid #d0d5da;
-    border-radius: 6px;
+    margin-top: 22px;
+    padding: 20px;
+    border: 1px dashed var(--pg-border-strong);
+    border-radius: 8px;
     background: #fff;
     position: relative;
     word-wrap: break-word;
     min-height: 240px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-}
-.pg-demo::after {
-    content: "Canvas";
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 4px 0;
-    color: #9da0a4;
-    font-size: 11px;
-    font-weight: bold;
-    left: -1px;
-    padding: 2px 6px;
-    position: absolute;
-    top: -1px;
 }
 
-/* ── Row blocks in the canvas ── */
+/* Tab-style labels on Container / Row / Column */
+.pg-demo::after,
+.pg-demo .pg-row-block::before,
+.pg-demo .column::after {
+    background: var(--pg-label-bg);
+    border: 1px solid var(--pg-border);
+    border-radius: 6px 6px 0 0;
+    border-bottom: none;
+    color: var(--pg-label-color);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    position: absolute;
+    top: -23px;
+    left: 12px;
+    letter-spacing: 0.2px;
+}
+.pg-demo::after {
+    content: "Container";
+}
+
+/* ── Row blocks in the canvas ──
+ * Transparent background + dashed outline so the user's Bootstrap row
+ * renders with its real theme styling; only the outline marks the edit
+ * boundary. Labels and hover states stay for discoverability.
+ */
 .pg-demo .pg-row-block {
-    background: #f5f7fa;
-    border: 1px solid #d0d5da;
-    border-radius: 6px;
-    margin: 16px 0;
-    padding: 28px 16px 12px;
+    background: transparent;
+    border: 1px dashed var(--pg-border-strong);
+    border-radius: 8px;
+    margin: 34px 0;
+    padding: 20px 12px 12px;
     position: relative;
-    transition: border-color 150ms ease, box-shadow 150ms ease;
+    transition: border-color 150ms ease;
     /* IMPORTANT: must be display:block (not flex) for jQuery UI sortable */
     display: block;
 }
 .pg-demo .pg-row-block:hover {
-    border-color: #6c8cc8;
-    box-shadow: 0 0 0 2px rgba(108,140,200,0.12);
+    border-style: solid;
+    border-color: var(--pg-teal);
 }
 .pg-demo .pg-row-block::before {
     content: "Row";
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 4px 0;
-    color: #9da0a4;
-    font-size: 11px;
-    font-weight: bold;
-    left: -1px;
-    line-height: 2;
-    padding: 2px 6px;
-    position: absolute;
-    top: -1px;
 }
 
-/* ── Columns in the canvas ── */
+/* ── Columns in the canvas ──
+ * Transparent + dashed outline so Bootstrap col-X widths and gutters
+ * are visible to the user exactly as they'll render on the target page.
+ */
 .pg-demo .column {
-    background: #fff;
-    border: 1px dashed #c5cbd1;
-    border-radius: 6px;
-    margin: 10px 6px;
-    padding: 40px 16px 20px;
+    background: transparent;
+    border: 1px dashed var(--pg-border);
+    border-radius: 8px;
+    margin-top: 28px;
+    padding: 16px 12px 12px;
     position: relative;
     min-height: 90px;
-    transition: border-color 150ms ease, background 150ms ease;
+    transition: border-color 150ms ease, border-style 150ms ease;
     /* display:block is critical for jQuery UI sortable inside columns */
     display: block;
 }
 .pg-demo .column:hover {
-    border-color: #6c8cc8;
     border-style: solid;
-    background: #fafcff;
+    border-color: var(--pg-teal);
 }
 .pg-demo .column::after {
     content: "Column";
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 4px 0;
-    color: #9da0a4;
-    font-size: 11px;
-    font-weight: bold;
-    left: -1px;
-    padding: 2px 6px;
-    position: absolute;
-    top: -1px;
 }
 
 /* ── Box elements inside columns ── */
 .pg-demo .pg-box-element {
     position: relative;
     padding-top: 28px;
+    margin-bottom: 12px;
 }
 .pg-demo .pg-box-element .pg-view {
     display: block;
@@ -272,17 +344,14 @@
 }
 
 /* ── Controls: remove badge, drag handle, config toolbar ──
- * Controls are visible at rest so users can discover them; they brighten
- * further on hover. Previously resting opacity was 0.2 which made the
- * drag handle effectively invisible — users couldn't start a drag.
+ * Visible at rest so they're discoverable; brighten on hover.
  */
 .pg-remove,
 .pg-drag,
 .pg-configuration {
-    opacity: 0.65;
+    opacity: 0.75;
     transition: opacity 200ms ease;
 }
-.pg-lyrow:hover > .pg-drag,
 .pg-demo .pg-row-block:hover > .pg-remove,
 .pg-demo .pg-row-block:hover > .pg-drag,
 .pg-demo .pg-box-element:hover .pg-remove,
@@ -294,18 +363,28 @@
 .pg-remove {
     position: absolute;
     top: 4px;
-    right: 4px;
+    right: 6px;
     z-index: 10;
     cursor: pointer;
     font-size: 11px;
+    border-radius: 999px;
+    padding: 2px 8px;
 }
 .pg-drag {
     position: absolute;
     top: 4px;
-    right: 68px;
+    right: 70px;
     cursor: grab;
     font-size: 11px;
     z-index: 10;
+    border-radius: 999px;
+    padding: 2px 10px;
+    background: var(--pg-teal) !important;
+    color: #fff !important;
+    border: none;
+}
+.pg-drag:hover {
+    background: var(--pg-teal-hover) !important;
 }
 .pg-configuration {
     position: absolute;
@@ -316,37 +395,35 @@
 }
 
 /* ── jQuery UI sortable placeholder ──
- * Shown as a visible drop target while the user drags.
- * Previously a 1px dashed grey line — nearly invisible on a light canvas.
+ * Clear blue drop zone so the user sees where the element will land.
  */
 .ui-sortable-placeholder {
     visibility: visible !important;
-    border: 2px dashed #3478f6 !important;
-    background: rgba(52, 120, 246, 0.08) !important;
-    border-radius: 6px;
-    min-height: 60px;
-    margin: 10px 0;
+    border: 2px dashed var(--pg-drop-accent) !important;
+    background: var(--pg-drop-tint) !important;
+    border-radius: 8px;
+    min-height: 70px;
+    margin: 14px 0;
     box-sizing: border-box;
 }
 
 /* ── jQuery UI drag ghost (the element that follows the cursor) ──
- * Applied to both draggable helpers (sidebar → canvas) and sortable items
- * while they're being moved. Gives the floating element clear edges,
- * shadow, and readable opacity so the user sees what they're carrying.
+ * Solid border + shadow + near-full opacity so users see the edges of
+ * what they're carrying. Previously helpers were 0.35 opacity with no
+ * border — effectively invisible on a white canvas.
  */
 .ui-draggable-dragging,
 .ui-sortable-helper {
     opacity: 0.95 !important;
-    border: 2px solid #3478f6 !important;
-    border-radius: 6px;
+    border: 2px solid var(--pg-drop-accent) !important;
+    border-radius: 8px;
     background: #fff !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.22);
     z-index: 10000;
     pointer-events: none;
 }
 
-/* Keep the helper's inner chrome visible while dragging, regardless of
- * the hover/opacity rules on the original element. */
+/* Keep helper chrome visible while dragging */
 .ui-draggable-dragging .pg-drag,
 .ui-draggable-dragging .pg-remove,
 .ui-draggable-dragging .pg-configuration,
@@ -356,12 +433,11 @@
     opacity: 1;
 }
 
-/* While any drag is in progress, highlight all valid drop zones so the
- * user can see where they're allowed to drop. */
+/* While any drag is in progress, highlight every valid drop zone */
 body.pg-dragging .pg-demo,
 body.pg-dragging .pg-demo .column {
-    border-color: #3478f6;
-    background: #f4f8ff;
+    border-color: var(--pg-drop-accent);
+    box-shadow: inset 0 0 0 1px var(--pg-drop-tint);
 }
 
 /* ── Download layout (hidden, used for HTML generation) ── */
@@ -370,30 +446,42 @@ body.pg-dragging .pg-demo .column {
 }
 
 /* ── Preview modes ── */
-/* Developer mode: hide builder chrome, show clean page */
+/* Developer mode: hide builder chrome, render content with the real
+ * Moodle Bootstrap flex layout so users see the true rendered result.
+ * The edit-mode `display: block` on .pg-row-block is needed for jQuery
+ * UI sortable; in preview we switch it back to a real Bootstrap .row.
+ */
 #bootstrapbuilder-wrap.devpreview .pg-remove,
 #bootstrapbuilder-wrap.devpreview .pg-drag,
 #bootstrapbuilder-wrap.devpreview .pg-configuration,
 #bootstrapbuilder-wrap.devpreview .pg-preview {
     display: none !important;
 }
-#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block {
+#bootstrapbuilder-wrap.devpreview .pg-demo,
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block,
+#bootstrapbuilder-wrap.devpreview .pg-demo .column {
     background: none;
     border: none;
     padding: 0;
     margin: 0;
+    box-shadow: none;
+    min-height: 0;
 }
-#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block::before {
-    display: none;
-}
-#bootstrapbuilder-wrap.devpreview .pg-demo .column {
-    background: none;
-    border: none;
-    padding-top: 16px;
-    padding-bottom: 16px;
-}
+#bootstrapbuilder-wrap.devpreview .pg-demo::after,
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block::before,
 #bootstrapbuilder-wrap.devpreview .pg-demo .column::after {
     display: none;
+}
+#bootstrapbuilder-wrap.devpreview .pg-demo .pg-row-block {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(-0.5 * var(--bs-gutter-x, 1.5rem));
+    margin-left:  calc(-0.5 * var(--bs-gutter-x, 1.5rem));
+    margin-bottom: 1rem;
+}
+#bootstrapbuilder-wrap.devpreview .pg-demo .column {
+    padding-right: calc(0.5 * var(--bs-gutter-x, 1.5rem));
+    padding-left:  calc(0.5 * var(--bs-gutter-x, 1.5rem));
 }
 #bootstrapbuilder-wrap.devpreview .pg-demo .pg-box-element {
     padding-top: 0;
@@ -409,6 +497,7 @@ body.pg-dragging .pg-demo .column {
     border: none;
     box-shadow: none;
 }
+#bootstrapbuilder-wrap.sourcepreview .pg-demo::after,
 #bootstrapbuilder-wrap.sourcepreview .pg-demo .pg-row-block::before,
 #bootstrapbuilder-wrap.sourcepreview .pg-demo .column::after {
     display: none;
