@@ -283,20 +283,21 @@
 }
 
 /* ── Row blocks in the canvas ──
- * Transparent background + dashed outline so the user's Bootstrap row
- * renders with its real theme styling; only the outline marks the edit
- * boundary. Labels and hover states stay for discoverability.
+ * Real Bootstrap-style flex row so col-6, col-4 etc. lay out at their
+ * actual widths during editing. jQuery UI sortable handles flex fine;
+ * we use tolerance:'pointer' in builder.js which pairs well with flex.
  */
 .pg-demo .pg-row-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
     background: transparent;
     border: 1px dashed var(--pg-border-strong);
     border-radius: 8px;
     margin: 34px 0;
-    padding: 20px 12px 12px;
+    padding: 20px 8px 12px;
     position: relative;
     transition: border-color 150ms ease;
-    /* IMPORTANT: must be display:block (not flex) for jQuery UI sortable */
-    display: block;
 }
 .pg-demo .pg-row-block:hover {
     border-style: solid;
@@ -307,8 +308,9 @@
 }
 
 /* ── Columns in the canvas ──
- * Transparent + dashed outline so Bootstrap col-X widths and gutters
- * are visible to the user exactly as they'll render on the target page.
+ * Bootstrap col-X classes on these elements already set width via flex.
+ * We add dashed borders for the edit guide and Bootstrap-matching
+ * gutter padding so they never touch each other.
  */
 .pg-demo .column {
     background: transparent;
@@ -316,11 +318,12 @@
     border-radius: 8px;
     margin-top: 28px;
     padding: 16px 12px 12px;
+    /* Use Bootstrap's gutter on left/right so columns don't collide */
+    padding-right: calc(0.5 * var(--bs-gutter-x, 1.5rem));
+    padding-left:  calc(0.5 * var(--bs-gutter-x, 1.5rem));
     position: relative;
     min-height: 90px;
     transition: border-color 150ms ease, border-style 150ms ease;
-    /* display:block is critical for jQuery UI sortable inside columns */
-    display: block;
 }
 .pg-demo .column:hover {
     border-style: solid;
