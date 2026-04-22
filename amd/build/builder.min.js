@@ -130,6 +130,78 @@ define([
         }
     }
 
+    // ── Column width badges ──────────────────────────────────────────────────
+    // Each canvas .column gets a clickable "col-N" badge that opens an inline
+    // <select> to change the Bootstrap column width.
+    /**
+     * Inject a .pg-col-badge span into every canvas column that doesn't
+     * already have one, reflecting the current col-N class.
+     */
+    function applyColumnBadges() {
+        $('.pg-demo .column').each(function() {
+            var $col = $(this);
+            if ($col.children('.pg-col-badge').length) { return; }
+            var val = readColWidth($col);
+            $col.prepend(
+                $('<span class="pg-col-badge" title="Click to change column width">col-' + val + '</span>')
+            );
+        });
+    }
+
+    /**
+     * Read the current col-N width from a .column's class list.
+     *
+     * @param {jQuery} $col The column element.
+     * @returns {number} Current column width (1-12), defaults to 12.
+     */
+    function readColWidth($col) {
+        var m = ($col.attr('class') || '').match(/col-(\d+)/);
+        return m ? parseInt(m[1], 10) : 12;
+    }
+
+    /**
+     * Refresh the badge text for a column after its class changes.
+     *
+     * @param {jQuery} $col The column element.
+     */
+    function refreshColumnBadge($col) {
+        $col.children('.pg-col-badge').first().text('col-' + readColWidth($col));
+    }
+
+    /**
+     * Delegated click handler on canvas: swap the col-N badge for a
+     * <select> of widths 1-12. On change, update the column's class and
+     * restore the badge. Uses Moodle's bundled jQuery — no extra deps.
+     */
+    function initColumnWidthEditor() {
+        $('.pg-demo').on('click', '.pg-col-badge', function(e) {
+            e.stopPropagation();
+            var $badge = $(this);
+            if ($badge.find('select').length) { return; }
+            var $col = $badge.closest('.column');
+            var current = readColWidth($col);
+
+            var options = '';
+            for (var i = 1; i <= 12; i++) {
+                options += '<option value="' + i + '"' +
+                           (i === current ? ' selected' : '') + '>col-' + i + '</option>';
+            }
+            var $sel = $('<select class="pg-col-select">' + options + '</select>');
+            $badge.empty().append($sel);
+            $sel.trigger('focus');
+
+            $sel.on('change', function() {
+                var newVal = parseInt($sel.val(), 10);
+                var classes = ($col.attr('class') || '').replace(/\bcol-\d+\b/, 'col-' + newVal);
+                $col.attr('class', classes);
+                refreshColumnBadge($col);
+            });
+            $sel.on('blur', function() {
+                refreshColumnBadge($col);
+            });
+        });
+    }
+
     // ── Drag & Drop ─────────────────────────────────────────────────────────
     /**
      * Initialise the canvas and column sortable widgets.
@@ -196,6 +268,7 @@ define([
                     }
                 });
                 initBoxDraggables();
+                applyColumnBadges();
                 if (stopSave > 0) { stopSave--; }
                 startDrag = 0;
             }
@@ -362,7 +435,7 @@ define([
         var $t = $layout.children();
 
         // Strip builder chrome
-        $t.find('.pg-preview, .pg-configuration, .pg-drag, .pg-remove').remove();
+        $t.find('.pg-preview, .pg-configuration, .pg-drag, .pg-remove, .pg-col-badge').remove();
 
         // Unwrap lyrow/box-element wrappers (leave only the row/col structure)
         $t.find('.pg-lyrow, .pg-box-element').each(function() {
@@ -490,12 +563,12 @@ define([
         });
         $('#pg-undo').on('click', function() {
             stopSave++;
-            if (undoLayout()) { initContainer(); }
+            if (undoLayout()) { initContainer(); applyColumnBadges(); }
             stopSave--;
         });
         $('#pg-redo').on('click', function() {
             stopSave++;
-            if (redoLayout()) { initContainer(); }
+            if (redoLayout()) { initContainer(); applyColumnBadges(); }
             stopSave--;
         });
 
@@ -617,6 +690,8 @@ define([
             initViewModes();
             initToolbar();
             initCopyButton();
+            initColumnWidthEditor();
+            applyColumnBadges();
 
             // Auto-save every second
             setInterval(handleSaveLayout, 1000);

@@ -364,24 +364,49 @@
     border-style: solid;
     border-color: var(--pg-teal);
 }
+/* Column label is now a real DOM element (.pg-col-badge) injected by
+ * builder.js so it's clickable. Hide the generic ::after fallback. */
 .pg-demo .column::after {
-    content: "Column";
+    content: none;
 }
-/* Show the actual Bootstrap width on each column's label so the user
- * sees col-6 / col-4 / etc. while editing. Attribute selectors cover
- * the preset grids used by the sidebar templates. */
-.pg-demo .column.col-1::after  { content: "col-1"; }
-.pg-demo .column.col-2::after  { content: "col-2"; }
-.pg-demo .column.col-3::after  { content: "col-3"; }
-.pg-demo .column.col-4::after  { content: "col-4"; }
-.pg-demo .column.col-5::after  { content: "col-5"; }
-.pg-demo .column.col-6::after  { content: "col-6"; }
-.pg-demo .column.col-7::after  { content: "col-7"; }
-.pg-demo .column.col-8::after  { content: "col-8"; }
-.pg-demo .column.col-9::after  { content: "col-9"; }
-.pg-demo .column.col-10::after { content: "col-10"; }
-.pg-demo .column.col-11::after { content: "col-11"; }
-.pg-demo .column.col-12::after { content: "col-12"; }
+
+/* ── Column width badge ──
+ * Clickable tab-style badge on each canvas column. Clicking it opens an
+ * inline <select> that updates the Bootstrap col-N class.
+ */
+.pg-demo .pg-col-badge {
+    position: absolute;
+    top: -23px;
+    left: 12px;
+    background: var(--pg-label-bg);
+    border: 1px solid var(--pg-border);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    color: var(--pg-label-color);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 12px;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 150ms ease, color 150ms ease;
+}
+.pg-demo .pg-col-badge:hover {
+    background: var(--pg-teal);
+    color: #fff;
+    border-color: var(--pg-teal);
+}
+.pg-demo .pg-col-badge select.pg-col-select {
+    appearance: auto;
+    font-size: 11px;
+    padding: 1px 4px;
+    border: 1px solid var(--pg-teal);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--pg-purple-deep);
+    cursor: pointer;
+    outline: none;
+}
 
 /* ── Box elements inside columns ── */
 .pg-demo .pg-box-element {
