@@ -261,6 +261,41 @@
     min-height: 240px;
 }
 
+/* ── Dropped .pg-lyrow row wrapper on the canvas ──
+ * The sidebar rule makes .pg-lyrow a small flex item; on the canvas we
+ * need it to be a full-width block so its .pg-view row takes the whole
+ * container. position:relative anchors the absolute drag/remove badges
+ * to the row itself rather than bubbling up to .pg-demo.
+ */
+.pg-demo .pg-lyrow {
+    display: block;
+    position: relative;
+    width: 100%;
+    padding: 0;
+    margin: 34px 0 0;
+    cursor: default;
+    background: transparent;
+}
+.pg-demo .pg-lyrow:first-child {
+    margin-top: 0;
+}
+/* Hide the grid-input preview once the row is on the canvas — users
+ * configure column widths on the column itself, not on the sidebar row. */
+.pg-demo .pg-lyrow .pg-preview {
+    display: none !important;
+}
+.pg-demo .pg-lyrow .pg-view,
+.pg-demo .pg-lyrow .pg-view > .pg-row-block {
+    display: block;
+    width: 100%;
+}
+/* Keep the flex layout on the inner row so col-X widths apply */
+.pg-demo .pg-lyrow .pg-view > .pg-row-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
 /* Tab-style labels on Container / Row / Column */
 .pg-demo::after,
 .pg-demo .pg-row-block::before,
@@ -332,6 +367,21 @@
 .pg-demo .column::after {
     content: "Column";
 }
+/* Show the actual Bootstrap width on each column's label so the user
+ * sees col-6 / col-4 / etc. while editing. Attribute selectors cover
+ * the preset grids used by the sidebar templates. */
+.pg-demo .column.col-1::after  { content: "col-1"; }
+.pg-demo .column.col-2::after  { content: "col-2"; }
+.pg-demo .column.col-3::after  { content: "col-3"; }
+.pg-demo .column.col-4::after  { content: "col-4"; }
+.pg-demo .column.col-5::after  { content: "col-5"; }
+.pg-demo .column.col-6::after  { content: "col-6"; }
+.pg-demo .column.col-7::after  { content: "col-7"; }
+.pg-demo .column.col-8::after  { content: "col-8"; }
+.pg-demo .column.col-9::after  { content: "col-9"; }
+.pg-demo .column.col-10::after { content: "col-10"; }
+.pg-demo .column.col-11::after { content: "col-11"; }
+.pg-demo .column.col-12::after { content: "col-12"; }
 
 /* ── Box elements inside columns ── */
 .pg-demo .pg-box-element {
