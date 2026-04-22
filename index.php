@@ -30,9 +30,14 @@ $PAGE->set_url(new moodle_url('/local/bootstrapbuilder/index.php'));
 $PAGE->set_title(get_string('pluginname', 'local_bootstrapbuilder'));
 $PAGE->set_heading(get_string('pluginname', 'local_bootstrapbuilder'));
 
-// 'Base' layout gives us the Moodle header/footer without the course sidebar.
-// Switch to 'admin' if you want the standard admin navigation in the header.
-$PAGE->set_pagelayout('base');
+// 'Standard' layout renders main content inside Moodle's main-inner region
+// alongside the side-pre / side-post block regions, so users can add Moodle
+// blocks next to the builder. Use 'base' if you want a block-free full-width
+// editing surface instead.
+$PAGE->set_pagelayout('standard');
+// Enable the standard block regions so "Add a block" works on this page.
+$PAGE->blocks->add_region('side-pre');
+$PAGE->blocks->add_region('side-post');
 
 require_login();
 require_capability('local/bootstrapbuilder:use', $context);

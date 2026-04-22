@@ -165,21 +165,22 @@
 #pg-canvas {
     flex: 1;
     min-width: 0;
-    padding: 20px;
-    background: #f8f9fa;
+    padding: 24px;
+    background: #f4f6f8;
     min-height: 400px;
 }
 
 /* ── Demo area (the droppable canvas) ── */
 .pg-demo {
     margin-top: 10px;
-    padding: 30px 15px 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 40px 24px 24px;
+    border: 1px solid #d0d5da;
+    border-radius: 6px;
     background: #fff;
     position: relative;
     word-wrap: break-word;
-    min-height: 200px;
+    min-height: 240px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
 }
 .pg-demo::after {
     content: "Canvas";
@@ -197,14 +198,19 @@
 
 /* ── Row blocks in the canvas ── */
 .pg-demo .pg-row-block {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 12px 0;
-    padding: 20px 12px 0;
+    background: #f5f7fa;
+    border: 1px solid #d0d5da;
+    border-radius: 6px;
+    margin: 16px 0;
+    padding: 28px 16px 12px;
     position: relative;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
     /* IMPORTANT: must be display:block (not flex) for jQuery UI sortable */
     display: block;
+}
+.pg-demo .pg-row-block:hover {
+    border-color: #6c8cc8;
+    box-shadow: 0 0 0 2px rgba(108,140,200,0.12);
 }
 .pg-demo .pg-row-block::before {
     content: "Row";
@@ -224,14 +230,20 @@
 /* ── Columns in the canvas ── */
 .pg-demo .column {
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin: 12px 0;
-    padding: 36px 16px 20px;
+    border: 1px dashed #c5cbd1;
+    border-radius: 6px;
+    margin: 10px 6px;
+    padding: 40px 16px 20px;
     position: relative;
-    min-height: 60px;
+    min-height: 90px;
+    transition: border-color 150ms ease, background 150ms ease;
     /* display:block is critical for jQuery UI sortable inside columns */
     display: block;
+}
+.pg-demo .column:hover {
+    border-color: #6c8cc8;
+    border-style: solid;
+    background: #fafcff;
 }
 .pg-demo .column::after {
     content: "Column";
@@ -259,12 +271,16 @@
     display: none;
 }
 
-/* ── Controls: remove badge, drag handle, config toolbar ── */
+/* ── Controls: remove badge, drag handle, config toolbar ──
+ * Controls are visible at rest so users can discover them; they brighten
+ * further on hover. Previously resting opacity was 0.2 which made the
+ * drag handle effectively invisible — users couldn't start a drag.
+ */
 .pg-remove,
 .pg-drag,
 .pg-configuration {
-    opacity: 0.2;
-    transition: opacity 300ms ease;
+    opacity: 0.65;
+    transition: opacity 200ms ease;
 }
 .pg-lyrow:hover > .pg-drag,
 .pg-demo .pg-row-block:hover > .pg-remove,
@@ -299,11 +315,53 @@
     z-index: 10;
 }
 
-/* ── jQuery UI sortable placeholder ── */
+/* ── jQuery UI sortable placeholder ──
+ * Shown as a visible drop target while the user drags.
+ * Previously a 1px dashed grey line — nearly invisible on a light canvas.
+ */
 .ui-sortable-placeholder {
-    outline: 1px dashed #bbb;
     visibility: visible !important;
-    border-radius: 4px;
+    border: 2px dashed #3478f6 !important;
+    background: rgba(52, 120, 246, 0.08) !important;
+    border-radius: 6px;
+    min-height: 60px;
+    margin: 10px 0;
+    box-sizing: border-box;
+}
+
+/* ── jQuery UI drag ghost (the element that follows the cursor) ──
+ * Applied to both draggable helpers (sidebar → canvas) and sortable items
+ * while they're being moved. Gives the floating element clear edges,
+ * shadow, and readable opacity so the user sees what they're carrying.
+ */
+.ui-draggable-dragging,
+.ui-sortable-helper {
+    opacity: 0.95 !important;
+    border: 2px solid #3478f6 !important;
+    border-radius: 6px;
+    background: #fff !important;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+    z-index: 10000;
+    pointer-events: none;
+}
+
+/* Keep the helper's inner chrome visible while dragging, regardless of
+ * the hover/opacity rules on the original element. */
+.ui-draggable-dragging .pg-drag,
+.ui-draggable-dragging .pg-remove,
+.ui-draggable-dragging .pg-configuration,
+.ui-sortable-helper .pg-drag,
+.ui-sortable-helper .pg-remove,
+.ui-sortable-helper .pg-configuration {
+    opacity: 1;
+}
+
+/* While any drag is in progress, highlight all valid drop zones so the
+ * user can see where they're allowed to drop. */
+body.pg-dragging .pg-demo,
+body.pg-dragging .pg-demo .column {
+    border-color: #3478f6;
+    background: #f4f8ff;
 }
 
 /* ── Download layout (hidden, used for HTML generation) ── */

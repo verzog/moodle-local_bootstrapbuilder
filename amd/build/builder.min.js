@@ -138,10 +138,21 @@ define([
         // Canvas + columns are sortable
         $('.pg-demo, .pg-demo .column').sortable({
             connectWith: '.column',
-            opacity: 0.35,
+            opacity: 0.9,
+            tolerance: 'pointer',
+            placeholder: 'ui-sortable-placeholder',
+            forcePlaceholderSize: true,
             handle: '.pg-drag',
-            start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
-            stop:  function() { if (stopSave > 0) { stopSave--; } startDrag = 0; }
+            start: function() {
+                $('body').addClass('pg-dragging');
+                if (!startDrag) { stopSave++; }
+                startDrag = 1;
+            },
+            stop:  function() {
+                $('body').removeClass('pg-dragging');
+                if (stopSave > 0) { stopSave--; }
+                startDrag = 0;
+            }
         });
         initConfigurationHandlers();
     }
@@ -156,16 +167,33 @@ define([
             connectToSortable: '.pg-demo',
             helper: 'clone',
             appendTo: 'body',
-            start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
+            cursor: 'grabbing',
+            start: function() {
+                $('body').addClass('pg-dragging');
+                if (!startDrag) { stopSave++; }
+                startDrag = 1;
+            },
             drag:  function(e, ui) { ui.helper.width(420); },
-            stop:  function(e, ui) {
+            stop:  function() {
+                $('body').removeClass('pg-dragging');
                 // Make new columns sortable, then re-init box draggables so
                 // they can connect to the newly created columns.
                 $('.pg-demo .column').sortable({
-                    opacity: 0.35,
+                    opacity: 0.9,
+                    tolerance: 'pointer',
+                    placeholder: 'ui-sortable-placeholder',
+                    forcePlaceholderSize: true,
                     connectWith: '.column',
-                    start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
-                    stop:  function() { if (stopSave > 0) { stopSave--; } startDrag = 0; }
+                    start: function() {
+                        $('body').addClass('pg-dragging');
+                        if (!startDrag) { stopSave++; }
+                        startDrag = 1;
+                    },
+                    stop:  function() {
+                        $('body').removeClass('pg-dragging');
+                        if (stopSave > 0) { stopSave--; }
+                        startDrag = 0;
+                    }
                 });
                 initBoxDraggables();
                 if (stopSave > 0) { stopSave--; }
@@ -193,9 +221,15 @@ define([
             connectToSortable: '.column',
             helper: 'clone',
             appendTo: 'body',
-            start: function() { if (!startDrag) { stopSave++; } startDrag = 1; },
+            cursor: 'grabbing',
+            start: function() {
+                $('body').addClass('pg-dragging');
+                if (!startDrag) { stopSave++; }
+                startDrag = 1;
+            },
             drag:  function(e, ui) { ui.helper.width(420); },
             stop:  function() {
+                $('body').removeClass('pg-dragging');
                 handleJsIds();
                 if (stopSave > 0) { stopSave--; }
                 startDrag = 0;
